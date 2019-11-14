@@ -1,7 +1,7 @@
 #pragma once
 #ifndef ROBOT_H
 #define ROBOT_H
-#include "map.h"
+#include "map.cpp"
 #incldue <iostream>
 #include <cstdlib>
 #include <vector>
@@ -21,6 +21,7 @@ class Robot {
 	
 	bool ableToMove();
 	void rotate();
+	void move(); //Moves one space
     bool ray_casting();
 	
 };
@@ -69,6 +70,29 @@ void Robot::rotate()
 		direction++;
 	else
 		direction = 0;
+}
+void Robot::move()
+{	
+	if(direction == 1 && !(m.isOccupied(locX + 1,locY)))
+	{
+		locX + 1;
+		
+	}
+			
+	if(direction == 0 && !(m.isOccupied(locX,locY+1)))
+	{
+		locY + 1;
+	}
+			
+	if(direction == 2 && !(m.isOccupied(locX,locY-1)))
+	{
+		locY - 1;
+	}
+			
+	if(direction == 3 && !(m.isOccupied(locX - 1,locY)))
+	{
+		locX - 1;
+	}
 }
 bool Robot::ray_casting() //Hey Gage do this
 {
