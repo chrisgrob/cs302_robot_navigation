@@ -116,9 +116,41 @@ void Robot::move()
 		locX - 1;
 	}
 }
-std::vector<Point> Robot::ray_casting() //Hey Gage do this
+
+// returns a vector of points. Each point has information about whether it's occupied or not
+std::vector<Point> Robot::ray_casting()
 {
-	return false;
+	std::vector points;
+
+	int start_direction;
+	int end_direction;
+	if (direction == 0) {
+		start_direction = 0;
+		end_direction = 180;
+	} else if (direction == 1) {
+		start_direction = -90;
+		end_direction = 90;
+	} else if (direction == 2) {
+		start_direction = 180;
+		end_direction = 360;
+	} else if (direction == 3) {
+		start_direction = 90;
+		end_direction = 270;
+	}
+
+	for (int i = 0; i <= 180; i += 15) {
+		Ray some_ray = Ray(direction, m, locX, locY);
+
+		std::vector<Point> some_points = some_ray.get_points();
+
+		int i = 0;
+		for (auto itr = some_points.begin(); itr != some_points.end(); itr++) {
+			points.push(some_points[i]);
+			i++;
+		}
+	}
+
+	return points;
 }
 
 // I hate trig
@@ -134,8 +166,24 @@ Ray::Ray(const int direction, const Map map, const int robot_x, const int robot_
 	float length = 0;
 	while (!occupied && length < 50.0) {
 		const x_read_to = x_read + 1;
-		const y_read_to = y_read + tan(radians);
-		const halfway_point = y_read + (0.5 * tan(radians));
+
+		bool not_straight = (direction != 0 && direction != 90) && (direction != 180 && direction != 270);
+
+		int y_read_to_temp;
+		int halfway_point_temp;
+		if (not_straight) {
+			y_read_to_temp = y_read + tan(radians);
+			halfway_point_temp = y_read + (0.5 * tan(radians));
+		} else if (direction == 90 || direction == 270) {
+			y_read_to_temp = y_read + 50;
+			halfway_point_temp = y_read + 25;
+		} else {
+			y_read_to_temp = 0;
+			halfway_point_temp = 0;
+		}
+
+		const y_read_to = y_read_to_temp;
+		const halfway_point = halfway_point_temp;
 
 		length += 1 / cos(radians)
 
