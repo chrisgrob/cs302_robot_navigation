@@ -129,13 +129,36 @@ Ray::Ray(const int direction, const Map map, const int robot_x, const int robot_
 	std::vector points;
 
 	int x_read = robot_x;
-	int y_read - robot_y;
+	int y_read = robot_y;
 	bool occupied = false;
-	while (!occupied) {
-		x_read_to = x_read + 1;
-		y_read_to = y_read + tan(radians);
+	float length = 0;
+	while (!occupied && length < 50.0) {
+		const x_read_to = x_read + 1;
+		const y_read_to = y_read + tan(radians);
+		const halfway_point = y_read + (0.5 * tan(radians));
 
-		
+		length += 1 / cos(radians)
+
+		const int first_limit = ceil(halfway_point)
+		for (int i = 1; i <= first_limit; i++) {
+			points.push(Point(x_read, y_read + i, map[x_read, y_read + i]));
+
+			if map[x_read, y_read + i] {
+				occupied = true;
+				break;				
+			}
+		}
+
+		const int second_start = floor(halfway_point);
+		const int second_limit = ceil(y_read_to);
+		for (int i = second_start, i <= second_limit; i++) {
+			points.push(Point(x_read_to, y_read + i, map[x_read_to, y_read + i]));
+
+			if map[x_read_to, y_read + i] {
+				occupied = true;
+				break;
+			}
+		}
 	}
 }
 
