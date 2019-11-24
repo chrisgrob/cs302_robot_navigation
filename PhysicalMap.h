@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-
+#include "adj_lists.cpp"
 const size_t MAP_SIZE = 16;
 
 struct Obstacle
@@ -40,3 +40,27 @@ private:
 
 	void visualize(std::ostream & os) const;
 };
+
+void graphDef(){
+	typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS, Vertex, Edge > Graph;
+	//Some typedefs for simplicity
+	typedef boost::graph_traits<Graph>::vertex_descriptor vertex_t;
+	typedef boost::graph_traits<Graph>::edge_descriptor edge_t;
+
+	//Instanciate a graph
+	Graph g;
+
+	// Create two vertices in that graph
+	vertex_t u = boost::add_vertex(g);
+	vertex_t v = boost::add_vertex(g);
+
+	// Create an edge conecting those two verticesv
+	edge_t e; bool b;
+	boost::tie(e,b) = boost::add_edge(u,v,g); //adding different edges and stuff
+
+
+	// Set the properties of a vertex and the edge
+	g[u].probTaken = .42;
+	g[u].probEmpty = .25;
+	
+}
