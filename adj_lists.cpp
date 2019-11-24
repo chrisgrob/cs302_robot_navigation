@@ -11,21 +11,22 @@
 
 struct VertexData
 {
-  std::string first_name;
-  int num;
+  float probTaken;
+	float probEmpty;
+
+
 };
 
 struct EdgeData
 {
-  std::string edge_name;
-  double dist;
+	// Nothing?
 };
 
 void example0()
 {
   // a simple adjaceny list with no extra properties.
   typedef boost::adjacency_list<boost::vecS, boost::vecS,
-                                boost::directedS,
+                                boost::undirectedS,
                                 boost::no_property,
                                 boost::no_property
                                 > MyGraphType;
@@ -58,27 +59,18 @@ void example0a()
   typedef boost::adjacency_list<boost::vecS, boost::vecS,
                                 boost::undirectedS,
                                 VertexData,
-                                boost::property<boost::edge_weight_t, double>
+                                boost::property<boost::edge_weight_t, float>
                                 > MyGraphType;
   MyGraphType G(5);
-  G[0].first_name = "Jeremy";
+  G[0].probTaken = .25;
 
   // first is the edge. second is a bool telling you whether this is a new edge
   // or an existing one.
   auto e = add_edge(1,2,G).first;
 
-  // the weight can be assigned using a weight map.
-  boost::property_map<MyGraphType, boost::edge_weight_t>::type weightmap =
-    get(boost::edge_weight, G);
-  weightmap[e] = 10.1;
+  std::cout << "Probability of being taken " << G[0].probTaken << std::endl;
+  std::cout << "Probability getter: " << get(&VertexData::probTaken, G)[0] << std::endl;
 
-  std::cout << "vertex name " << G[0].first_name << std::endl;
-  std::cout << "name getter " << get(&VertexData::first_name, G)[0] << std::endl;
-
-
-  std::cout << "saved weight " << weightmap[e] << std::endl;  
-  put(weightmap, e, 20);
-  std::cout << "saved weight " << get(weightmap, e) << std::endl;
 }
 
 
@@ -86,92 +78,25 @@ void example1()
 {
 
   typedef boost::adjacency_list<boost::vecS, boost::vecS,
-                                boost::directedS,
+                                boost::undirectedS,
                                 VertexData,
                                 boost::property<boost::edge_weight_t, double, EdgeData>
                                 > MyGraphType;
   MyGraphType G(5);
-  G[0].first_name = "Jeremy";
+  G[0].probTaken = .69;
 
   // first is the edge. second is a bool telling you whether this is a new edge
   // or an existing one.
-  auto e = add_edge(1,2,G).first;
-  G[e].edge_name = "the edge";
-
-  boost::property_map<MyGraphType, boost::edge_weight_t>::type weightmap =
-    get(boost::edge_weight, G);
-  weightmap[e] = 10.1;
-
-  std::cout << "vertex name " << G[0].first_name << std::endl;
-  std::cout << "name getter " << get(&VertexData::first_name, G)[0] << std::endl;
-
-  std::cout << "saved edge name " << G[e].edge_name << std::endl;
-  std::cout << "edge name getter " << get(&EdgeData::edge_name, G)[e] << std::endl;
-  // add example using get to get the property value
-  std::cout << "saved weight " << weightmap[e] << std::endl;
 
 
+
+  std::cout << "probability of being taken:  " << G[0].probTaken << std::endl;
+  std::cout << "Probability of being empty:  " << get(&VertexData::probEmpty, G)[0] << std::endl;
 
 }
 
 
-// /usr/include/boost/graph/named_function_params.hpp
-void example2()
-{
 
-  typedef boost::adjacency_list<boost::vecS, boost::vecS,
-                                boost::undirectedS,
-                                boost::property<boost::vertex_distance_t, int,
-                                                boost::property<boost::vertex_distance2_t, int> >,
-                                boost::property<boost::edge_weight_t, double, EdgeData>
-                                > MyGraphType;
-  MyGraphType G(5);
-
-  boost::property_map<MyGraphType, boost::vertex_distance_t>::type distance_map =
-    get(boost::vertex_distance, G);
-  boost::property_map<MyGraphType, boost::vertex_distance2_t>::type distance_map2 =
-    get(boost::vertex_distance2, G);
-
-  auto v = add_vertex(G);
-  distance_map[v] = 10;
-  distance_map2[v] = 20;
-  
-  std::cout << "distance "  << get(boost::vertex_distance, G)[v] << std::endl;
-  std::cout << "distance2 " << get(boost::vertex_distance2, G)[v] << std::endl; 
-  
-}
-
-void example3()
-{
-
-  typedef boost::adjacency_list<boost::vecS, boost::vecS,
-                                boost::directedS,
-                                VertexData,
-                                EdgeData> MyGraphType;
-
-  // when instantiating without args, don't make the mistake of writing
-  // MyGraphType G();
-  // you'll get cryptic/misleading errors if you do.
-  MyGraphType G;
-
-  VertexData vd = { "my name", 42 };
-  add_vertex(vd, G);
-
-  vd = { "my second name", 43 };
-  int v1 = add_vertex(G);
-  G[v1] = vd;
-
-  int v2 = add_vertex({ "my last name", 44 }, G);
-
-  // don't forget the .first
-  auto e = add_edge(v1, v2, {"the edge", 77.3}, G).first;
-
-  std::cout << "name getter0 " << get(&VertexData::first_name, G)[0] << std::endl;
-  std::cout << "name getter1 " << get(&VertexData::first_name, G)[1] << std::endl;
-
-  std::cout << "dist getter " << get(&EdgeData::dist, G)[e] << std::endl;
-  
-}
 
 
 
@@ -181,6 +106,4 @@ main(int, char *[])
   example0();
   example0a();
   example1();
-  example2();
-  example3();
 }
