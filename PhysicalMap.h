@@ -65,6 +65,7 @@ private:
 	MyGraphType map;
 
 	void visualize(std::ostream & os) const;
+<<<<<<< HEAD
 	std::pair<int, int> coordinate(const int i, const int mapSize);
 
 	bool pointIsObstacle(const int i, const Obstacle obs);
@@ -73,3 +74,30 @@ private:
 	bool pointIsRightEdge(const int, const int map_size);
 	bool attemptConnection(const int i, const int other, MyGraphType& g, const Obstacle obs);
 };
+=======
+};
+
+void graphDef(){
+	typedef boost::adjacency_list<boost::listS, boost::vecS, boost::directedS, Vertex, Edge > Graph;
+	//Some typedefs for simplicity
+	typedef boost::graph_traits<Graph>::vertex_descriptor vertex_t;
+	typedef boost::graph_traits<Graph>::edge_descriptor edge_t;
+
+	//Instanciate a graph
+	Graph g;
+
+	// Create two vertices in that graph
+	vertex_t u = boost::add_vertex(g);
+	vertex_t v = boost::add_vertex(g);
+
+	// Create an edge conecting those two verticesv
+	edge_t e; bool b;
+	boost::tie(e,b) = boost::add_edge(u,v,g); //adding different edges and stuff
+
+
+	// Set the properties of a vertex and the edge
+	g[u].probTaken = .42;
+	g[u].probEmpty = .25;
+	
+}
+>>>>>>> 3c996995ad5529d6db0c4cc1befda46c170d9db3
