@@ -12,11 +12,11 @@ CXX = g++
 CFLAGS = -O3 -I. -std=c++14
 LFLAGS = 
 
-TARGETS = adj_lists
+TARGETS = main
 
 all: $(TARGETS)
 
-adj_lists: adj_lists.o
+main: main.o PhysicalMap.o
 
 
 $(TARGETS):
