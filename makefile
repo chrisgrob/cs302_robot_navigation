@@ -16,7 +16,7 @@ TARGETS = main
 
 all: $(TARGETS)
 
-main: main.o PhysicalMap.o
+main: main.o PhysicalMap.o robot.o cardinal_direction.o
 
 
 $(TARGETS):

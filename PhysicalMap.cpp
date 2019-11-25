@@ -1,23 +1,11 @@
 #include "PhysicalMap.h"
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 
-/*PhysicalMap::PhysicalMap()
+PhysicalMap::PhysicalMap()
 {
-	size_t bottomLimit = MAP_SIZE / 4;
-	size_t topLimit = 2 * bottomLimit;
-
-	for (size_t i = 0; i < MAP_SIZE; i++)
-	{
-		for (size_t j = 0; j < MAP_SIZE; j++)
-		{
-			if ((i >= bottomLimit && i <= topLimit) && (j >= bottomLimit && j <= topLimit))
-				map[j][i] = true;
-			else
-				map[j][i] = false;
-		}
-	}
-}*/
+}
 
 /*PhysicalMap::PhysicalMap(const size_t obsXMin, const size_t obsXMax, const size_t obsYMin, const size_t obsYMax)
 {
@@ -101,16 +89,10 @@ PhysicalMap::PhysicalMap(const Obstacle obs)
 	}
 }*/
 
-/*PhysicalMap::PhysicalMap(const PhysicalMap & other)
+PhysicalMap::PhysicalMap(const PhysicalMap & other)
 {
-	for (size_t i = 0; i < MAP_SIZE; i++)
-	{
-		for (size_t j = 0; j < MAP_SIZE; j++)
-		{
-			map[j][i] = other.map[j][i];
-		}
-	}
-}*/
+	map = other.map;
+}
 
 /*PhysicalMap & PhysicalMap::operator=(const PhysicalMap & rhs)
 {
@@ -152,7 +134,8 @@ void PhysicalMap::visualize(std::ostream & os) const
 			count++;
 		}
 		
-		os << count << " ";
+		// os << count << " ";
+		os << map[*iter].probTaken << " ";
 		
 		if ((i+1) % MAP_SIZE == 0) {
 			os << std::endl;
@@ -264,4 +247,67 @@ int PhysicalMap::edgeCount() const {
 	}
 	
 	return i;
+}
+
+int PhysicalMap::index(const int x_pos, const int y_pos) {
+	return x_pos + (MAP_SIZE * y_pos);
+}
+
+bool PhysicalMap::inBounds(const int x, const int y) {
+	return (x >= 0 && x < MAP_SIZE) && (y >= 0 && y < MAP_SIZE);
+}
+
+static inline float proximity(int locX, int locY) //proximity is going to be used a lot for updating the map, therefore inline
+{
+	
+	if (locX != locY)
+	{
+		float x1 = locX % MAP_SIZE;
+		float y1 = locX / MAP_SIZE;
+		float x2 = locY % MAP_SIZE;
+		float y2 = locY / MAP_SIZE;
+		float d = sqrt(pow(x1-x2, 2) + pow(y1-y2));
+		float result = 1.99-1.5*log10(d+3.642);
+		return result;
+	}
+	else //They are the same, therefore it will have a high chance for the reading to be accurate
+		return .999999999;
+	
+}
+
+void PhysicalMap::updateMap(int locX, int locY, float sensorRead) //Based off of getting a reading for a specific location it will determine the likelihood of other points on the map having a that same probability
+{
+	int index = (MAP_SIZE * locY) + locX;
+	std::cout << map[index].probTaken << std::endl;
+	//auto range = boost::in_edges(index, g);
+	for (int i = 0; i < MAP_SIZE; i++)
+	{
+		for (int j = 0; j < MAP_SIZE; j++)
+		{
+			if (map[index].probTaken != 0 && map[index].probEmpty != 0) //This should always be the case, but for safety
+			{
+				map[(MAP_SIZE*i)+j].probTaken = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probTaken / map[index].probTaken; 
+				map[(MAP_SIZE*i)+j].probEmpty = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probEmpty / map[index].probEmpty; 
+			}
+			
+			// std::cout << map[(MAP_SIZE*i)+j].probTaken << std::endl;
+
+			//std::cout << map[index].probEmpty << std::endl;
+			
+		}
+	}
+
+}
+
+MyGraphType::vertex_descriptor PhysicalMap::vFromIndex(const int index) {
+	auto iter_pair = boost::vertices(map);
+
+	int count = 0;
+	for (auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
+		if (count == index) {
+			return *iter;
+		}
+		
+		count++;
+	}
 }

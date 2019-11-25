@@ -8,10 +8,12 @@
 #include "boost/property_map/property_map.hpp"
 #include "boost/graph/named_function_params.hpp"
 
-const size_t MAP_SIZE = 16;
+const size_t MAP_SIZE = 1000;
 
 struct VertexData
 {
+	VertexData() : probTaken(0.5), probEmpty(0.5) {}
+
 	float probTaken;
 	float probEmpty;
 };
@@ -46,11 +48,11 @@ public:
 	// I made more ctors than were necessary for flexibility
 	// The default and first parameterized ctor should be enough
 	// The default ctor creates the obstacle specified by the project
-	// PhysicalMap();
+	PhysicalMap();
 	// PhysicalMap(const size_t obsXMin, const size_t obsXMax, const size_t obsYMin, const size_t obsYMax);
 	PhysicalMap(const Obstacle obs);
 	// PhysicalMap(const Obstacle * obsArray, const size_t numObstacles);
-	// PhysicalMap(const PhysicalMap & other);
+	PhysicalMap(const PhysicalMap & other);
 	// PhysicalMap & operator=(const PhysicalMap & rhs);
 
 	// bool isOccupied(const size_t x, const size_t y) const;
@@ -61,12 +63,20 @@ public:
 	int vertexCount() const;
 	int edgeCount() const;
 
-private:
-	MyGraphType map;
-
-	void visualize(std::ostream & os) const;
+	int index(const int x_pos, const int y_pos);
 
 	std::pair<int, int> coordinate(const int i, const int mapSize);
+	
+	bool inBounds(const int x, const int y);
+
+	MyGraphType map;
+	
+	void updateMap(int x, int y);
+
+	MyGraphType::vertex_descriptor vFromIndex(const int index);
+
+private:
+	void visualize(std::ostream & os) const;
 
 	bool pointIsObstacle(const int i, const Obstacle obs);
 	bool pointIsBottom(const int i, const int map_size);
