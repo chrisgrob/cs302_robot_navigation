@@ -268,17 +268,17 @@ static inline float proximity(int locX, int locY) //proximity is going to be use
 		float y2 = locY / MAP_SIZE;
 		float d = sqrt(pow(x1-x2, 2) + pow(y1-y2));
 		float result = 1.99-1.5*log10(d+3.642);
-		return result;
+		return 1-result;
 	}
 	else //They are the same, therefore it will have a high chance for the reading to be accurate
-		return .999999999;
+		return 1-.999999999;
 	
 }
 
 void PhysicalMap::updateMap(int locX, int locY, float sensorRead) //Based off of getting a reading for a specific location it will determine the likelihood of other points on the map having a that same probability
 {
 	int index = (MAP_SIZE * locY) + locX;
-	std::cout << map[index].probTaken << std::endl;
+	// std::cout << map[index].probTaken << std::endl;
 	//auto range = boost::in_edges(index, g);
 	for (int i = 0; i < MAP_SIZE; i++)
 	{
@@ -286,8 +286,16 @@ void PhysicalMap::updateMap(int locX, int locY, float sensorRead) //Based off of
 		{
 			if (map[index].probTaken != 0 && map[index].probEmpty != 0) //This should always be the case, but for safety
 			{
-				map[(MAP_SIZE*i)+j].probTaken = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probTaken / map[index].probTaken; 
-				map[(MAP_SIZE*i)+j].probEmpty = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probEmpty / map[index].probEmpty; 
+				auto value = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probTaken / map[index].probTaken; 
+				auto value2 = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probEmpty / map[index].probEmpty; 
+				if (map[(MAP_SIZE*i)+j].probTaken > map[index].probTaken)
+					map[(MAP_SIZE*i)+j].probTaken -= value;
+				else
+					map[(MAP_SIZE*i)+j].probTaken += value;
+				if (map[(MAP_SIZE*i)+j].probEmpty > map[index].probEmpty)
+					map[(MAP_SIZE*i)+j].probEmpty -= value2;
+				else
+					map[(MAP_SIZE*i)+j].probEmpty += value2;
 			}
 			
 			// std::cout << map[(MAP_SIZE*i)+j].probTaken << std::endl;
