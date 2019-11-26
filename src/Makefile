@@ -1,6 +1,5 @@
 EXECUTABLE_PATH=..
 INCLUDE_PATH=../headers/include
-DEPENDENCY_PATH=../dependencies/boost
 OUT_PATH=../bin
 
 CXX = g++
