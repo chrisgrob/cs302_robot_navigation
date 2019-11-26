@@ -1,19 +1,41 @@
 #include "cardinal_direction.h"
 
-CardinalDirection fromNumber(const int num) {
-  if (num == North) {
+CardinalDirection FromNumber(const int num)
+{
+  if (num == North)
+  {
     return North;
   }
-  else if (num == East) {
+  else if (num == East)
+  {
     return East;
   }
-  else if (num == South) {
+  else if (num == South)
+  {
     return South;
   }
-  else if (num == West) {
+  else if (num == West)
+  {
     return West;
   }
-  else {
+  else if (num == NorthEast)
+  {
+    return NorthEast;
+  }
+  else if (num == SouthEast)
+  {
+    return SouthEast;
+  }
+  else if (num == SouthWest)
+  {
+    return SouthWest;
+  }
+  else if (num == NorthWest)
+  {
+    return NorthWest;
+  }
+  else
+  {
     throw;
   }
 }

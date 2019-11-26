@@ -13,19 +13,19 @@ struct BinaryRV
 {
   BinaryRV();
 
-  float prob_taken;
-  float prob_empty;
+  double prob_taken;
+  double prob_empty;
 };
 
 struct EdgeData
 {
-  // Nothing?
+  CardinalDirection direction;
 };
 
 typedef boost::adjacency_list<boost::vecS, boost::vecS,
-  boost::undirectedS,
+  boost::directedS,
   BinaryRV,
-  boost::property<boost::edge_weight_t, float>
+  EdgeData
 > MapType;
 
 struct Obstacle
@@ -70,4 +70,4 @@ bool PointIsObstacle(const size_t index, const Obstacle obstacle, const size_t m
 bool PointIsBottom(const size_t index, const size_t map_size);
 bool PointIsLeftEdge(const size_t index, const size_t map_size);
 bool PointIsRightEdge(const size_t index, const size_t map_size);
-bool AttemptConnection(const size_t this_index, const size_t other_index, const Obstacle obstacle, MapType& map)
+bool AttemptConnection(const size_t this_index, const size_t other_index, const Obstacle obstacle, MapType& map);

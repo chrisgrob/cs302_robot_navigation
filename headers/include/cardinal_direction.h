@@ -1,12 +1,15 @@
-#ifndef CARDINAL_DIRECTION_H
-#define CARDINAL_DIRECTION_H
+#pragma once
 
-enum CardinalDirection {
-    North = 0,
-    East = 1,
-    South = 2,
-    West = 3,
+enum CardinalDirection
+{
+  North = 0,
+  East = 1,
+  South = 2,
+  West = 3,
+  NorthEast = 4,
+  SouthEast = 5,
+  SouthWest = 6,
+  NorthWest = 7,
 };
 
-CardinalDirection fromNumber(const int num);
-#endif // CARDINAL_DIRECTION_H
+CardinalDirection FromNumber(const int num);
