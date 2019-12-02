@@ -1,2 +1,2 @@
 # cs302_robot_navigation
-Authors: Daniel, Gage Christensen
+# Authors: Daniel Enriquez, Erik Marsh, Gage Christensen
