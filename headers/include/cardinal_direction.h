@@ -1,7 +1,7 @@
 #pragma once
 
-enum CardinalDirection
-{
+enum CardinalDirection //Enum for what direction the robot is facing, can only face 8 directions
+{ //Depending on the number that it is the direction can later be used for the direction of the robot and the raycast
   North = 0,
   East = 1,
   South = 2,
