@@ -12,7 +12,7 @@
 #include "cardinal_direction.h"
 #include "trilean.h"
 
-struct BinaryRV
+struct BinaryRV //A struct to create a binary random variable to determine the odds of a given spot being empty or taken
 {
   BinaryRV();
 
@@ -24,8 +24,10 @@ typedef boost::adjacency_list<boost::vecS, boost::vecS,
   boost::directedS,
   BinaryRV,
   CardinalDirection
-> MapType;
+> MapType; //Creates an adjacency list using a series of RVs to determine whether the give spot is empty or not
 
+
+//Typedefs for different edges and vertices of the map
 typedef MapType::vertex_descriptor VertexType;
 typedef MapType::edge_descriptor EdgeType;
 
@@ -36,7 +38,7 @@ typedef std::pair<VertexIterator, VertexIterator> VertexRange;
 typedef std::pair<EdgeIterator, EdgeIterator> EdgeRange;
 
 
-struct Obstacle
+struct Obstacle //Creates an obstacle based off the min and max x positiona nd the min and max y position
 {
   Obstacle(const int x_min_p, const int x_max_p, const int y_min_p, const int y_max_p);
 
@@ -46,11 +48,11 @@ struct Obstacle
   int y_max;
 };
 
-typedef std::pair<int, int> CoordinateType;
-typedef std::pair<float, float> FloatCoordinateType;
-typedef std::pair<Sign, Sign> SignPair;
+typedef std::pair<int, int> CoordinateType; //Creates the coordinate type
+typedef std::pair<float, float> FloatCoordinateType; //Same as the other, except with flaots
+typedef std::pair<Sign, Sign> SignPair; //Creates a sign pair
 
-int Localize(const int direction);
-float ToRadians(const int degrees);
-float VectorMagnitude(const FloatCoordinateType vector);
-double Slope(const int degrees);
+int Localize(const int direction); //Localizes the direction to be within 0-360
+float ToRadians(const int degrees); //Changes degrees to radians
+float VectorMagnitude(const FloatCoordinateType vector); //Returns the magnitude of the vector
+double Slope(const int degrees); //Determines the slop of the vector given the degrees
