@@ -207,7 +207,9 @@ void Robot::CastDiagonal(const SignPair steps)
 
 
 
-void UpdateMap(const VertexType vertex, const double sensor_reading)
+void Robot::UpdateMap(const VertexType vertex, const double sensor_reading)
 {
-
+  
+  map_.AddToVertex(vertex, sensor_reading);
+  
 }
