@@ -1,28 +1,28 @@
 #include "robot_utils.h"
 
-unsigned int Quartile(const int degrees)
+unsigned int Quartile(const int degrees) //Checks which quartile the degree is in
 {
   unsigned int quartile;
 
-  if (degrees >= 0 && direction < 90)
+  if (degrees >= 0 && direction < 90) //First quartile
   {
     quartile = 0;
   }
-  else if (degrees >= 90 && degrees < 180)
+  else if (degrees >= 90 && degrees < 180) //Second quartile
   {
     quartile = 1;
   }
-  else if (degrees >= 180 && degrees < 270)
+  else if (degrees >= 180 && degrees < 270) //3rd quartile
   {
     quartile = 2;
   }
-  else if (degrees >= 270 && degrees < 360)
+  else if (degrees >= 270 && degrees < 360) //4th quartile
   {
     quartile = 3;
   }
   else
   {
-    throw;
+    throw; //This shouldn't happen if we properly made it between 0-360 from other function
   }
 
   return quartile;
@@ -30,7 +30,7 @@ unsigned int Quartile(const int degrees)
 
 
 
-SignPair Steps(const unsigned int quartile)
+SignPair Steps(const unsigned int quartile) //Makes the first and second value equal to whether or not it is positive or negative as a result of the quartile
 {
   SignPair steps;
 
@@ -147,7 +147,7 @@ std::pair<VertexType, Trilean> DesiredVertexHelper(
 
 
 
-CardinalDirection DesiredDirection(const int read_y, const double ray_y, const SignPair steps)
+CardinalDirection DesiredDirection(const int read_y, const double ray_y, const SignPair steps) //Gets the desired direction from where it wants to ray cast
 {
   CardinalDirection direction;
 
@@ -166,13 +166,13 @@ CardinalDirection DesiredDirection(const int read_y, const double ray_y, const S
 
 
 
-CardinalDirection DesiredDirectionDiagonal(const SignPair steps)
+CardinalDirection DesiredDirectionDiagonal(const SignPair steps) //Based off of where it is facing how will it increment
 {
   CardinalDirection direction;
 
   if (Positive == steps.first)
   {
-    if (Positive == steps.second)
+    if (Positive == steps.second) 
     {
       direction = NorthEast;
     }
@@ -195,7 +195,7 @@ CardinalDirection DesiredDirectionDiagonal(const SignPair steps)
 }
 
 
-CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPair steps)
+CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPair steps) //Same as diagonal except horizontal
 {
   CardinalDirection direction;
 
@@ -235,9 +235,9 @@ CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPa
 
 
 
-CardinalDirection DesiredDirectionVertical(const SignPair steps)
+CardinalDirection DesiredDirectionVertical(const SignPair steps) //Same but with vertical
 {
-  CardinalDirection direction;
+  CardinalDirection direction; 
 
   if (Positive == steps.second)
   {
@@ -255,7 +255,7 @@ CardinalDirection DesiredDirectionVertical(const SignPair steps)
 
 
 std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction, const OccupancyGridMap& map)
-{
+{ //Returns the desired edge of the pair and tells it where it should be facing for the proper edge
   std::pair<EdgeType, bool> desired_edge;
 
   const EdgeRange available_edges = boost::out_edges(vertex, map.get_map());
@@ -276,7 +276,7 @@ std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDir
 
 
 
-bool HasEdges(const VertexType vertex)
+bool HasEdges(const VertexType vertex) //Checking if the vertex has edges, useful for determining the path and the ability for the robot to move, raycast, etc.
 {
   bool has_edges = true;
 
