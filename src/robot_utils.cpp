@@ -111,6 +111,19 @@ std::pair<VertexType, Trilean> DesiredVertex(
   const CardinalDirection desired_direction = DesiredDirection(read_pos.second, ray_pos.second, steps);
   const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map);
 
+  desired_vertex = DesiredVertexHelper(desired_edge, map);
+
+  return desired_vertex;
+}
+
+
+
+std::pair<VertexType, Trilean> DesiredVertexHelper(
+  const std::pair<EdgeType, bool> desired_edge, 
+  const OccupancyGridMap& map)
+{
+  std::pair<VertexType, Trilean> desired_vertex;
+
   if (desired_edge.second)
   {
     desired_vertex.first = boost::target(desired_edge.first, map.get_map());
@@ -215,6 +228,24 @@ CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPa
     {
       throw;
     }
+  }
+
+  return direction;
+}
+
+
+
+CardinalDirection DesiredDirectionVertical(const SignPair steps)
+{
+  CardinalDirection direction;
+
+  if (Positive == steps.second)
+  {
+    direction = North;
+  }
+  else if (Negative == steps.second)
+  {
+    direction = South;
   }
 
   return direction;

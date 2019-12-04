@@ -35,7 +35,7 @@ private:
   void Ray(const int direction);
   void Cast(const SignPair steps, const int direction);
   void CastVertical(const SignPair steps);
-  void CastDiagonal(const unsigned int quartile);
+  void CastDiagonal(const SignPair steps);
 
   void UpdateMap(VertexType vertex, double sensor_reading);
 

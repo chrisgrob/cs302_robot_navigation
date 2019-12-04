@@ -10,14 +10,14 @@ Robot::Robot(const CoordinateType pos, const CardinalDirection orientation, cons
 
 
 // setters and getters
-void set_pos(const CoordinateType pos) { pos_ = pos; }
-CoordinateType get_pos() const { return pos_; }
+void Robot::set_pos(const CoordinateType pos) { pos_ = pos; }
+CoordinateType Robot::get_pos() const { return pos_; }
 
-void set_orientation(const CardinalDirection orientation) { orientation_ = orientation; }
-CardinalDirection get_orientation() const { return orienation_; }
+void Robot::set_orientation(const CardinalDirection orientation) { orientation_ = orientation; }
+CardinalDirection Robot::get_orientation() const { return orienation_; }
 
-void set_map(const OccupancyGridMap map) { map_ = map; }
-const OccupancyGridMap& get_map() const { return map_; }
+void Robot::set_map(const OccupancyGridMap map) { map_ = map; }
+const OccupancyGridMap& Robot::get_map() const { return map_; }
 
 
 
@@ -64,19 +64,19 @@ void Robot::Ray(const int direction)
 {
   const unsigned int quartile = Quartile(direction);
 
-  const auto steps = Steps(quartile);
+  const SignPair steps = Steps(quartile);
 
-  if (90 == direction)
+  const bool vertical = (90 == direction) || (270 == direction);
+
+  const bool diagonal = 0 == direction % 45;
+
+  if (vertical)
   {
-    CastUp();
+    CastVertical(steps);
   }
-  else if (270 == direction)
+  else if (diagonal) 
   {
-    CastDown();
-  }
-  else if (0 == direction % 45) 
-  {
-    CastDiagonal(quartile);
+    CastDiagonal(steps);
   }
   else
   {
@@ -125,6 +125,88 @@ void Robot::Cast(const SignPair steps, const int direction)
 
 
 void Robot::CastVertical(const SignPair steps)
+{
+  CoordinateType read_pos = pos_;
+
+  int distance = 0;
+
+  while (distance < 50)
+  {
+    const CardinalDirection desired_direction = DesiredDirectionVertical(steps);
+
+    const VertexType this_vertex = map_.Vertex(read_pos);
+
+    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map_);
+
+    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge, map_);
+
+    if (desired_vertex.second == Unknown)
+    {
+      break;
+    }
+    if (desired_vertex.second == False)
+    {
+      UpdateMap(desired_vertex.first, 0.9);
+      break;
+    }
+    else if (desired_vertex.second == True)
+    {
+      UpdateMap(desired_vertex.first, 0.7);
+      read_pos = map_.Coordinate(desired_vertex.first)
+    }
+    else
+    {
+      throw;
+    }
+
+    distance++;
+  }
+}
+
+
+
+void Robot::CastDiagonal(const SignPair steps)
+{
+  CoordinateType read_pos = pos_;
+
+  double distance = 0;
+
+  while (distance < 50)
+  {
+    const CardinalDirection desired_direction = DesiredDirectionDiagonal(steps);
+
+    const VertexType this_vertex = map_.Vertex(read_pos);
+
+    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map_);
+
+    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge, map_);
+
+    if (desired_vertex.second == Unknown)
+    {
+      break;
+    }
+    if (desired_vertex.second == False)
+    {
+      UpdateMap(desired_vertex.first, 0.9);
+      break;
+    }
+    else if (desired_vertex.second == True)
+    {
+      UpdateMap(desired_vertex.first, -0.7);
+      read_pos = map_.Coordinate(desired_vertex.first)
+    }
+    else
+    {
+      throw;
+    }
+
+    distance += sqrt(2);
+  }
+}
+
+
+
+void UpdateMap(const VertexType vertex, const double sensor_reading)
 {
 
 }
