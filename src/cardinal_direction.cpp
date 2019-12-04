@@ -1,6 +1,6 @@
 #include "cardinal_direction.h"
 
-CardinalDirection FromNumber(const int num)
+CardinalDirection FromNumber(const int num) //Sets the direction depending on the number that was inserted into it
 {
   if (num == North)
   {
