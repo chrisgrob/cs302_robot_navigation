@@ -4,7 +4,6 @@
 #include "boost/property_map/property_map.hpp"
 #include "boost/graph/named_function_params.hpp"
 
-#include "test_struct.h"
 #include <iostream>
 
 /*#include "PhysicalMap.h"

@@ -20,9 +20,9 @@ OccupancyGridMap::OccupancyGridMap()
 // Except for obstacles, which have no connections
 OccupancyGridMap::OccupancyGridMap(const size_t map_size, const Obstacle obs)
 {
-	auto g = MyGraphType(MAP_SIZE * MAP_SIZE);
+  MapType graph = MapType(map_size * map_size);
 	
-	auto iter_pair = boost::vertices(g);
+	VertexRange vertex_range = boost::vertices(graph);
 	
 	int i = 0;
 	for (auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
