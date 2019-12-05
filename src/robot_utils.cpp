@@ -111,6 +111,7 @@ std::pair<VertexType, Trilean> DesiredVertex(
   const VertexType this_vertex = map.Vertex(read_pos);
 
   const CardinalDirection desired_direction = DesiredDirection(read_pos.second, ray_pos.second, steps);
+  std::cout << desired_direction << std::endl;
   const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map);
 
   desired_vertex = DesiredVertexHelper(desired_edge, map);
@@ -155,10 +156,12 @@ CardinalDirection DesiredDirection(const int read_y, const double ray_y, const S
 
   if (ray_y == read_y)
   {
+    std::cout << "No I got executed" << std::endl;
     direction = DesiredDirectionDiagonal(steps);
   }
   else
   {
+    std::cout << "I got executed" << std::endl;
     bool horizontal = Horizontal(read_y, ray_y, steps.second);
     direction = DesiredDirectionHorizontal(horizontal, steps);
   }
@@ -194,6 +197,8 @@ CardinalDirection DesiredDirectionDiagonal(const SignPair steps) //Based off of 
       direction = SouthWest;
     }
   }
+  
+  return direction;
 }
 
 

@@ -11,7 +11,7 @@ int main()
 
   OccupancyGridMap robot_map = OccupancyGridMap(map_size, obstacle);
 
-  Robot robot = Robot(std::make_pair(7, 15), South, robot_map);
+  Robot robot = Robot(std::make_pair(7, 8), North, robot_map);
 
   robot.RayCasting();
 

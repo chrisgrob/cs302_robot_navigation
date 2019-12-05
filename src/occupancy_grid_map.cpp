@@ -203,7 +203,7 @@ bool OccupancyGridMap::VertexIsObstacle(const VertexType vertex, const Obstacle 
   CoordinateType coordinate = Coordinate(vertex);
 
   const bool in_x_range = coordinate.first >= obstacle.x_min && coordinate.first <= obstacle.x_max;
-  const bool in_y_range = coordinate.first >= obstacle.y_min && coordinate.first <= obstacle.y_max;
+  const bool in_y_range = coordinate.second >= obstacle.y_min && coordinate.second <= obstacle.y_max;
 
   if (in_x_range && in_y_range)
   {
