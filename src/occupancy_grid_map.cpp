@@ -1,316 +1,308 @@
 #include "occupancy_grid_map.h"
 
-// Initial probabilities are 50/50
-BinaryRV::BinaryRV() : prob_taken(0.5), prob_empty(0.5) {}
 
 
-// Simple parameterized c-tor
-Obstacle::Obstacle(const size_t x_min_p, const size_t x_max_p, const size_t y_min_p, const size_t y_max_p)
-  : x_min(x_min_p), x_max(x_max_p), y_min(y_min_p), y_max(y_max_p)
-{
-}
-
-
-// Nothing for default c-tor
+// Empty graph
 OccupancyGridMap::OccupancyGridMap()
 {
+  map_size_ = 0;
 }
 
-// Will go through list of vertices and connect each with it's surroundings
-// Except for obstacles, which have no connections
-OccupancyGridMap::OccupancyGridMap(const size_t map_size, const Obstacle obs)
+
+
+// Free vertices have connections to every surrounding vertex
+// Non-free vertices don't have any outward connections
+OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obstacle)
 {
-  MapType graph = MapType(map_size * map_size);
+  map_size_ = map_size;
+
+  map_ = MapType(map_size * map_size);
 	
 	VertexRange vertex_range = boost::vertices(graph);
 	
-	int i = 0;
-	for (auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
-		if (!pointIsObstacle(i, obs)) {
-			if(!pointIsLeftEdge(i, MAP_SIZE)) {
-				attemptConnection(i, i - 1, g, obs);
-				
-				if (!pointIsBottom(i, MAP_SIZE)) {
-					attemptConnection(i, i + MAP_SIZE - 1, g, obs);
-				}
-			}
-			
-			if(!pointIsBottom(i, MAP_SIZE)) {
-				attemptConnection(i, i + MAP_SIZE, g, obs);
-			}
-			
-			if(!pointIsRightEdge(i, MAP_SIZE)) {
-				attemptConnection(i, i + 1, g, obs);
-				
-				if(!pointIsBottom(i, MAP_SIZE)) {
-					attemptConnection(i, i + MAP_SIZE + 1, g, obs);
-				}
-			}
+	for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++) {
+		if (!VertexIsObstacle(*iter, obstacle)) {
+      if (!VertexIsTop(*iter))
+      {
+        Connection(*iter, std::make_pair(0, -1));
+        
+        if (!VertexIsLeftEdge(*iter))
+        {
+          Connection(*iter, std::make_pair(-1, -1));
+        }
+
+        if (!VertexIsRightEdge(*iter))
+        {
+          Connection(*iter, std::make_pair(1, -1));
+        }
+      }
+
+      if (!VertexIsRightEdge(*iter))
+      {
+        Connection(*iter, std::make_pair(1, 0));
+      }
+
+      if (!VertexIsBottom(*iter))
+      {
+        Connection(*iter, std::make_pair(0, 1));
+
+        if (!VertexIsLeftEdge(*iter))
+        {
+          Connection(*iter, std::make_pair(-1, 1));
+        }
+
+        if (!VertexIsRightEdge(*iter))
+        {
+          Connection(*iter, std::make_pair(1, 1));
+        }
+      }
+
+      if (!VertexIsLeftEdge(*iter))
+      {
+        Connection(*iter, std::make_pair(-1, 0));
+      }
 		}
-		
-		i++;
 	}
-	
-	map = g;
 }
 
-/*OccupancyGridMap::OccupancyGridMap(const Obstacle * obsArray, const size_t numObstacles)
-{
-	//creates first obstacle and the non-occupied spaces
-	for (size_t i = 0; i < MAP_SIZE; i++)
-	{
-		for (size_t j = 0; j < MAP_SIZE; j++)
-		{
-			if ((j >= obsArray[0].xMin && j <= obsArray[0].xMax) &&
-				(i >= obsArray[0].yMin && i <= obsArray[0].yMax))
-				map[j][i] = true;
-			else
-				map[j][i] = false;
-		}
-	}
 
-	//creates all remaining obstacles
-	for (size_t obsIndex = 1; obsIndex < numObstacles; obsIndex++)
-	{
-		for (size_t i = 0; i < MAP_SIZE; i++)
-		{
-			for (size_t j = 0; j < MAP_SIZE; j++)
-			{
-				if ((j >= obsArray[0].xMin && j <= obsArray[0].xMax) &&
-					(i >= obsArray[0].yMin && i <= obsArray[0].yMax))
-					map[j][i] = true;
-			}
-		}
-	}
-}*/
 
 OccupancyGridMap::OccupancyGridMap(const OccupancyGridMap & other)
 {
-	map = other.map;
+  map_size_ = other.map_size_
+	map_ = other.map_;
 }
 
-/*OccupancyGridMap & OccupancyGridMap::operator=(const OccupancyGridMap & rhs)
+
+
+void OccupancyGridMap::set_map(const MapType map)
 {
-	if (this != &rhs)
-	{
-		for (size_t i = 0; i < MAP_SIZE; i++)
-		{
-			for (size_t j = 0; j < MAP_SIZE; j++)
-			{
-				map[j][i] = rhs.map[j][i];
-			}
-		}
-	}
+  map_ = map;
+}
 
-	return *this;
-}*/
 
-/*bool OccupancyGridMap::isOccupied(const size_t x, const size_t y) const
+
+const MapType& OccupancyGridMap::get_map() const
 {
-	//array indexing causes this to be (y, x)
-	return map[y][x];
-}*/
+  return map_;
+}
 
-void OccupancyGridMap::visualize() const
+
+
+IndexType OccupancyGridMap::get_map_size() const
 {
-	visualize(std::cout);
+  return map_size_;
 }
 
-void OccupancyGridMap::visualize(std::ostream & os) const
+
+
+bool OccupancyGridMap::IsInBounds(const CoordinateType coordinate) const
 {
-	auto iter_pair = boost::vertices(map);
-	
-	int i = 0;
-	for(auto iter = iter_pair.first; iter!= iter_pair.second; iter++) {
-		auto adj_v = boost::adjacent_vertices(*iter, map);
-		
-		int count = 0;
-		for(auto iter = adj_v.first; iter != adj_v.second; iter++) {
-			count++;
-		}
-		
-		// os << count << " ";
-		os << map[*iter].probTaken << " ";
-		
-		if ((i+1) % MAP_SIZE == 0) {
-			os << std::endl;
-		}
-		
-		i++;
-	}
+  bool is_in_bounds;
+
+  const bool x_in_bounds = coordinate.first >= 0 && coordinate.first < map_size_;
+  const bool y_in_bounds = coordinate.second >= 0 && coordinate.second < map_size_;
+
+  if (x_in_bounds && y_in_bounds)
+  {
+    is_in_bounds = true;
+  }
+  else
+  {
+    is_in_bounds = false;
+  }
+
+  return is_in_bounds;
 }
 
-std::ostream & operator<<(std::ostream & os, const OccupancyGridMap & map)
+
+
+void OccupancyGridMap::AddToVertex(const VertexType vertex, const double number)
 {
-	map.visualize(os);
-	return os;
+  map_[vertex] += number;
 }
 
-std::pair<int, int> OccupancyGridMap::coordinate(const int i, const int map_size)
+
+
+VertexType OccupancyGridMap::Vertex(const CoordinateType coordinate) const
 {
-	int x = 0, y = 0;
-	
-	int index = i;
-	while (index >= map_size) {
-		y++;
-		index -= map_size;
-	}
-	x = index;
-	
-	std::pair<int, int> coord;
-	coord.first = x;
-	coord.second = y;
-	
-	return coord;
+  VertexType vertex;
+
+  const IndexType index = coordinate.first + (map_size_ * coordinate.second);
+
+  vertex = boost::vertex(index, map_);
+
+  return vertex;
 }
 
-bool OccupancyGridMap::pointIsObstacle(const int i, const Obstacle obs) 
+
+
+CoordinateType OccupancyGridMap::Coordinate(const VertexType vertex) const
 {
-	auto coord = coordinate(i, MAP_SIZE);
-	
-	if (coord.first >= obs.xMin && coord.first <= obs.xMax) {
-		if (coord.second >= obs.yMin && coord.second <= obs.yMax) {
-			return true;
-		}
-	}
-	
-	return false;
+  CoordinateType coordinate = std::make_pair(0, 0);
+
+  IndexType index = boost::get(boost::vertex_index, map_, vertex);
+
+  coordinate.first = index;
+
+  while (coordinate.first >= map_size_)
+  {
+    coordinate.first -= map_size_;
+    coordinate.second += 1;
+  }
+
+  return coordinate;
 }
 
-bool OccupancyGridMap::pointIsBottom(const int i, const int mapSize)
+
+
+void OccupancyGridMap::Visualize() const
 {
-	auto coord = coordinate(i, mapSize);
-	
-	if (coord.second == mapSize - 1) {
-		return true;
-	}
-	
-	return false;
+  std::cout << *this << std::endl;
 }
 
-bool OccupancyGridMap::pointIsLeftEdge(const int i, const int mapSize)
+
+
+std::ostream& operator<<(std::ostream& os, const OccupancyGridMap& map)
 {
-	auto coord = coordinate(i, mapSize);
-	
-	if(coord.first == 0) {
-		return true;
-	}
-	
-	return false;
+  map.Visualize(os);
 }
 
-bool OccupancyGridMap::pointIsRightEdge(const int i, const int mapSize)
+
+
+void OccupancyGridMap::Visualize(std::ostream& os) const
 {
-	auto coord = coordinate(i, mapSize);
-	
-	if(coord.first == mapSize - 1) {
-		return true;
-	}
-	
-	return false;
+  IndexType x_pos = 0;
+
+  const VertexRange vertex_range = boost::vertices(map_);
+
+  for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++)
+  {
+    os << map_[*iter] << " ";
+
+    x_pos++;
+
+    if (x_pos == map_size_)
+    {
+      os << std::endl;
+      x_pos = 0;
+    }
+  }
 }
 
-bool OccupancyGridMap::attemptConnection(const int i, const int other, MyGraphType& g, const Obstacle obs) {
-	if (!pointIsObstacle(other, obs)) {
-		if (!edge(other, i, g).second){
-			add_edge(i, other, g);
-		}
-		
-		return true;
-	}
-	
-	return false;
-}
 
-int OccupancyGridMap::vertexCount() const {
-	auto iter_pair = boost::vertices(map);
-	
-	int i = 0;
-	for (auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
-		i++;
-	}
-	
-	return i; 
-}
 
-int OccupancyGridMap::edgeCount() const {
-	auto iter_pair = boost::edges(map);
-	
-	int i = 0;
-	for (auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
-		i++;
-	}
-	
-	return i;
-}
-
-int OccupancyGridMap::index(const int x_pos, const int y_pos) {
-	return x_pos + (MAP_SIZE * y_pos);
-}
-
-bool OccupancyGridMap::inBounds(const int x, const int y) {
-	return (x >= 0 && x < MAP_SIZE) && (y >= 0 && y < MAP_SIZE);
-}
-
-static inline float proximity(int locX, int locY) //proximity is going to be used a lot for updating the map, therefore inline
+bool OccupancyGridMap::VertexIsObstacle(const VertexType vertex, const Obstacle obstacle)
 {
-	
-	if (locX != locY)
-	{
-		float x1 = locX % MAP_SIZE;
-		float y1 = locX / MAP_SIZE;
-		float x2 = locY % MAP_SIZE;
-		float y2 = locY / MAP_SIZE;
-		float d = sqrt(pow(x1-x2, 2) + pow(y1-y2));
-		float result = 1.99-1.5*log10(d+3.642);
-		return 1-result;
-	}
-	else //They are the same, therefore it will have a high chance for the reading to be accurate
-		return 1-.999999999;
-	
+  bool vertex_is_obstacle;
+
+  CoordinateType coordinate = Coordinate(vertex);
+
+  const bool in_x_range = coordinate.first >= obstacle.x_min && coordinate.first <= obstacle.x_max;
+  const bool in_y_range = coordinate.first >= obstacle.y_min && coordinate.first <= obstacle.y_max;
+
+  if (in_x_range && in_y_range)
+  {
+    vertex_is_obstacle = true;
+  }
+  else
+  {
+    vertex_is_obstacle = false;
+  }
+
+  return vertex_is_obstacle;
 }
 
-void OccupancyGridMap::updateMap(int locX, int locY, float sensorRead) //Based off of getting a reading for a specific location it will determine the likelihood of other points on the map having a that same probability
+
+
+bool OccupancyGridMap::VertexIsTop(const VertexType vertex)
 {
-	int index = (MAP_SIZE * locY) + locX;
-	// std::cout << map[index].probTaken << std::endl;
-	//auto range = boost::in_edges(index, g);
-	for (int i = 0; i < MAP_SIZE; i++)
-	{
-		for (int j = 0; j < MAP_SIZE; j++)
-		{
-			if (map[index].probTaken != 0 && map[index].probEmpty != 0) //This should always be the case, but for safety
-			{
-				auto value = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probTaken / map[index].probTaken; 
-				auto value2 = proximity(index, i+j) + map[(MAP_SIZE*i)+j].probEmpty / map[index].probEmpty; 
-				if (map[(MAP_SIZE*i)+j].probTaken > map[index].probTaken)
-					map[(MAP_SIZE*i)+j].probTaken -= value;
-				else
-					map[(MAP_SIZE*i)+j].probTaken += value;
-				if (map[(MAP_SIZE*i)+j].probEmpty > map[index].probEmpty)
-					map[(MAP_SIZE*i)+j].probEmpty -= value2;
-				else
-					map[(MAP_SIZE*i)+j].probEmpty += value2;
-			}
-			
-			// std::cout << map[(MAP_SIZE*i)+j].probTaken << std::endl;
+  bool vertex_is_top;
 
-			//std::cout << map[index].probEmpty << std::endl;
-			
-		}
-	}
+  CoordinateType coordinate = Coordinate(vertex);
 
+  if (coordinate.second == 0)
+  {
+    vertex_is_top = true;
+  }
+  else
+  {
+    vertex_is_top = false;
+  }
+
+  return vertex_is_top;
 }
 
-MyGraphType::vertex_descriptor OccupancyGridMap::vFromIndex(const int index) {
-	auto iter_pair = boost::vertices(map);
 
-	int count = 0;
-	for (auto iter = iter_pair.first; iter != iter_pair.second; iter++) {
-		if (count == index) {
-			return *iter;
-		}
-		
-		count++;
-	}
+
+bool OccupancyGridMap::VertexIsBottom(const VertexType vertex)
+{
+  bool vertex_is_bottom;
+
+  CoordinateType coordinate = Coordinate(vertex);
+
+  if (coordinate.second == map_size_ - 1)
+  {
+    vertex_is_bottom = true;
+  }
+  else
+  {
+    vertex_is_bottom = false;
+  }
+
+  return vertex_is_bottom;
+}
+
+
+
+bool OccupancyGridMap::VertexIsLeftEdge(const VertexType vertex)
+{
+  bool vertex_is_left_edge;
+
+  CoordinateType coordinate = Coordinate(vertex);
+
+  if (coordinate.first == 0)
+  {
+    vertex_is_left_edge = true;
+  }
+  else
+  {
+    vertex_is_left_edge = false;
+  }
+
+  return vertex_is_left_edge;
+}
+
+
+
+bool OccupancyGridMap::VertexIsRightEdge(const VertexType vertex)
+{
+  bool vertex_is_right_edge;
+
+  CoordinateType coordinate = Coordinate(vertex);
+
+  if (coordinate.first == map_size_ - 1)
+  {
+    vertex_is_right_edge = true;
+  }
+  else
+  {
+    vertex_is_right_edge = false;
+  }
+
+  return vertex_is_right_edge;
+}
+
+
+
+void OccupancyGridMap::Connection(const VertexType vertex, const CoordinateType coordinate_change)
+{
+  const CoordinateType coordinate = Coordinate(vertex);
+  const CoordinateType other_coordinate = std::make_pair(
+    coordinate.first + coordinate_change.first, 
+    coordinate.second + coordinate_change.second);
+
+  const VertexType other_vertex = Vertex(other_coordinate);
+
+  boost::add_edge(vertex, other_vertex, map_);
 }

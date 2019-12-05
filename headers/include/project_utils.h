@@ -35,6 +35,8 @@ typedef MapType::edge_iterator EdgeIterator;
 typedef std::pair<VertexIterator, VertexIterator> VertexRange;
 typedef std::pair<EdgeIterator, EdgeIterator> EdgeRange;
 
+typedef int IndexType;
+
 
 struct Obstacle
 {
