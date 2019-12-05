@@ -8,7 +8,8 @@ class Robot
 {
 private:
   CardinalDirection orientation_; //Where the robot is currently facing
-  CoordinateType pos_; //The position on the map that it is currently in
+  // CoordinateType pos_; //The position on the map that it is currently in
+  VertexType occupied_vertex_;
   OccupancyGridMap map_; //The actual map that the robot is on
 
 public:

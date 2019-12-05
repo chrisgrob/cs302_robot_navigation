@@ -6,13 +6,13 @@ Robot::Robot() : pos_(std::make_pair(0, 0)), orientation_(CardinalDirection::Sou
 
 // Parameterized c-tor
 Robot::Robot(const CoordinateType pos, const CardinalDirection orientation, const OccupancyGridMap map)
-  : pos_(pos), orientation_(orientation), map_(map) {}
+  : occupied_vertex_(map.Vertex(pos)), orientation_(orientation), map_(map) {}
 //Pased off of the cordinate position and orientation, it will make a map and be able to save that map
 
 
 // setters and getters
-void Robot::set_pos(const CoordinateType pos) { pos_ = pos; } //set position
-CoordinateType Robot::get_pos() const { return pos_; } //get position
+void Robot::set_pos(const CoordinateType pos) { occupied_vertex_ = map_.Vertex(pos); } //set position
+CoordinateType Robot::get_pos() const { return map_.Coordinate(occupied_vertex_); } //get position
 
 void Robot::set_orientation(const CardinalDirection orientation) { orientation_ = orientation; } //set orientation
 CardinalDirection Robot::get_orientation() const { return orientation_; } //get orientation
@@ -90,15 +90,15 @@ void Robot::Cast(const SignPair steps, const int direction)
   const double slope = Slope(direction);
 
   double ray_distance = 0.0;
-  FloatCoordinateType ray_pos = std::make_pair((double)pos_.first, (double)pos_.second);
-  CoordinateType read_pos = pos_;
+  DoubleCoordinateType ray_pos = std::make_pair(0.0, 0.0);
+  VertexType read_vertex = occupied_vertex_;
 
   while (ray_distance < 50.0)
   {
     ray_pos.first += steps.first * 1.0;
-    ray_pos.second = slope * (ray_pos.first - pos_.first) + pos_.second;
+    ray_pos.second = slope * ray_pos.first;
 
-    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_pos, ray_pos, steps);
+    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps);
 
     if (Trilean::Unknown == desired_vertex.second) 
     {
@@ -112,14 +112,14 @@ void Robot::Cast(const SignPair steps, const int direction)
     else if (Trilean::True == desired_vertex.second)
     {
       UpdateMap(desired_vertex.first, -0.7);
-      read_pos = map_.Coordinate(desired_vertex.first);
+      read_vertex = desired_vertex.first;
     }
     else
     {
       throw;
     }
 
-    ray_distance = VectorMagnitude(std::make_pair(ray_pos.first - pos_.first, ray_pos.second - pos_.second));
+    ray_distance = VectorMagnitude(ray_pos);
   }
 }
 

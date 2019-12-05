@@ -102,19 +102,13 @@ bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
 
 std::pair<VertexType, Trilean> Robot::DesiredVertex(
   const CoordinateType read_pos, 
-  const FloatCoordinateType ray_pos,
+  const DoubleCoordinateType ray_pos,
   const SignPair steps)
 {
-  std::pair<VertexType, Trilean> desired_vertex;
-
-  const VertexType this_vertex = map_.Vertex(read_pos);
-
   const CardinalDirection desired_direction = DesiredDirection(read_pos.second, ray_pos.second, steps);
-  const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction);
+  const std::pair<EdgeType, bool> desired_edge = DesiredEdge(occupied_vertex_, desired_direction);
 
-  desired_vertex = DesiredVertexHelper(desired_edge);
-
-  return desired_vertex;
+  return DesiredVertexHelper(desired_edge);
 }
 
 
@@ -138,6 +132,7 @@ std::pair<VertexType, Trilean> Robot::DesiredVertexHelper(const std::pair<EdgeTy
   }
   else
   {
+    desired_vertex.first = 0;
     desired_vertex.second = Trilean::Unknown;
   }
 

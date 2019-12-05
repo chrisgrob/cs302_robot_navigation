@@ -46,7 +46,7 @@ struct Obstacle //Creates an obstacle based off the min and max x positiona nd t
 };
 
 typedef std::pair<int, int> CoordinateType; //Creates the coordinate type
-typedef std::pair<float, float> FloatCoordinateType; //Same as the other, except with flaots
+typedef std::pair<double, double> DoubleCoordinateType; //Same as the other, except with doubles
 typedef std::pair<Sign, Sign> SignPair; //Creates a sign pair
 
 int Localize(const int direction); //Localizes the direction to be within 0-360
