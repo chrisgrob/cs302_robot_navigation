@@ -21,7 +21,9 @@ OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obst
 	VertexRange vertex_range = boost::vertices(graph);
 	
 	for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++) {
-		if (!VertexIsObstacle(*iter, obstacle)) {
+    map_[*iter] = 0; // Initial probabilities are 50/50, which in logodd terms means 0
+    
+    if (!VertexIsObstacle(*iter, obstacle)) {
       if (!VertexIsTop(*iter))
       {
         Connection(*iter, std::make_pair(0, -1));

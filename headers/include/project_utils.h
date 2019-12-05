@@ -12,17 +12,9 @@
 #include "cardinal_direction.h"
 #include "trilean.h"
 
-struct BinaryRV //A struct to create a binary random variable to determine the odds of a given spot being empty or taken
-{
-  BinaryRV();
-
-  double prob_taken;
-  double prob_empty;
-};
-
 typedef boost::adjacency_list<boost::vecS, boost::vecS,
   boost::directedS,
-  BinaryRV,
+  double,
   CardinalDirection
 > MapType; //Creates an adjacency list using a series of RVs to determine whether the give spot is empty or not
 

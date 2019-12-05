@@ -1,8 +1,5 @@
 #include "project_utils.h"
 
-// Initial probabilities are 50/50
-BinaryRV::BinaryRV() : prob_taken(0.5), prob_empty(0.5) {} //Sets the default probability to be taken or empty to be .5
-
 
 // Simple parameterized c-tor
 Obstacle::Obstacle(const int x_min_p, const int x_max_p, const int y_min_p, const int y_max_p)
