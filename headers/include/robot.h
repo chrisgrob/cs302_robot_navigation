@@ -2,14 +2,13 @@
 
 #include "project_utils.h"
 #include "occupancy_grid_map.h"
-#include "robot_utils.h"
 
 class Robot
 {
 private:
+  VertexType occupied_vertex_;
   CardinalDirection orientation_; //Where the robot is currently facing
   // CoordinateType pos_; //The position on the map that it is currently in
-  VertexType occupied_vertex_;
   OccupancyGridMap map_; //The actual map that the robot is on
 
 public:
@@ -46,8 +45,8 @@ private:
   SignPair Steps(const unsigned int quartile); //Returns the sign pair in relation to the quartile
   bool Horizontal(const int read_y, const float ray_y, const Sign step_y); //Determines whether it can step horizontally or not
   std::pair<VertexType, Trilean> DesiredVertex(
-    const CoordinateType read_pos, 
-    const FloatCoordinateType ray_pos, 
+    const VertexType read_vertex, 
+    const DoubleCoordinateType ray_pos, 
     const SignPair steps); //The desired vertex for where on the map the ray casting is occurring
   std::pair<VertexType, Trilean> DesiredVertexHelper(const std::pair<EdgeType, bool> desired_edge);
   CardinalDirection DesiredDirection(const int read_y, const double ray_y, const SignPair steps);

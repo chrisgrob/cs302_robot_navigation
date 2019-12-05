@@ -4,7 +4,7 @@ OUT_PATH=../bin
 
 CXX = g++
 
-CFLAGS = -O3 -I$(INCLUDE_PATH) -I$(DEPENDENCY_PATH) -std=c++14
+CFLAGS = -O3 -I$(INCLUDE_PATH) -isystem$(DEPENDENCY_PATH) -std=c++14 -Wall
 LFLAGS = 
 
 TARGETS = main

@@ -50,6 +50,6 @@ typedef std::pair<double, double> DoubleCoordinateType; //Same as the other, exc
 typedef std::pair<Sign, Sign> SignPair; //Creates a sign pair
 
 int Localize(const int direction); //Localizes the direction to be within 0-360
-float ToRadians(const int degrees); //Changes degrees to radians
-float VectorMagnitude(const FloatCoordinateType vector); //Returns the magnitude of the vector
+double ToRadians(const int degrees); //Changes degrees to radians
+double VectorMagnitude(const DoubleCoordinateType vector); //Returns the magnitude of the vector
 double Slope(const int degrees); //Determines the slop of the vector given the degrees

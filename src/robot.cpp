@@ -1,7 +1,7 @@
 #include "robot.h"
 
 // Default c-tor
-Robot::Robot() : pos_(std::make_pair(0, 0)), orientation_(CardinalDirection::South) {} 
+Robot::Robot() {} 
 //Sets the X, Y coordinates to 0,0 and facing south
 
 // Parameterized c-tor
@@ -127,7 +127,7 @@ void Robot::Cast(const SignPair steps, const int direction)
 
 void Robot::CastVertical(const SignPair steps)
 {
-  CoordinateType read_pos = pos_;
+  VertexType read_vertex = occupied_vertex_;
 
   int distance = 0;
 
@@ -135,9 +135,7 @@ void Robot::CastVertical(const SignPair steps)
   {
     const CardinalDirection desired_direction = DesiredDirectionVertical(steps);
 
-    const VertexType this_vertex = map_.Vertex(read_pos);
-
-    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction);
+    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(read_vertex, desired_direction);
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge);
 
