@@ -26,14 +26,14 @@ int Localize(const int direction) //Makes the direction always equal to a value 
 
 
 
-float ToRadians(const int degrees) //Conversion to make the degree be equal to radians
+double ToRadians(const int degrees) //Conversion to make the degree be equal to radians
 {
-  return (float)degrees * pi / 180.0f; // degrees*π/180 = radians
+  return (double)degrees * pi / 180.0; // degrees*π/180 = radians
 }
 
 
 
-float VectorMagnitude(const FloatCoordinateType vector)
+double VectorMagnitude(const DoubleCoordinateType vector)
 {
   return sqrt(pow(vector.first, 2.0) + pow(vector.second, 2.0)); //Returns the magnitude of the vector --> sqrt/x^2+y^2 = |v|
 }

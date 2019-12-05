@@ -1,7 +1,7 @@
 #include "robot.h"
 
 // Default c-tor
-Robot::Robot() : pos_(std::make_pair(0, 0)), orientation_(CardinalDirection::South) {} 
+Robot::Robot() {} 
 //Sets the X, Y coordinates to 0,0 and facing south
 
 // Parameterized c-tor
@@ -236,7 +236,6 @@ CardinalDirection Robot::DesiredDirectionVertical(const SignPair steps)
 
   return direction;
 }
-
 
 
 // Similar to DesiredDirectionVertical()

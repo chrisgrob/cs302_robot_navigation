@@ -2,14 +2,13 @@
 
 #include "project_utils.h"
 #include "occupancy_grid_map.h"
-#include "robot_utils.h"
 
 class Robot
 {
 private:
+  VertexType occupied_vertex_;
   CardinalDirection orientation_; //Where the robot is currently facing
   // CoordinateType pos_; //The position on the map that it is currently in
-  VertexType occupied_vertex_;
   OccupancyGridMap map_; //The actual map that the robot is on
 
 public:
