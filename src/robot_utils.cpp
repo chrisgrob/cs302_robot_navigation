@@ -38,23 +38,23 @@ SignPair Steps(const unsigned int quartile) //Makes the first and second value e
 
   if (quartile == 0)
   {
-    steps.first = Positive;
-    steps.second = Negative;
+    steps.first = Sign::Positive;
+    steps.second = Sign::Negative;
   }
   else if (quartile == 1)
   {
-    steps.first = Negative;
-    steps.second = Negative;
+    steps.first = Sign::Negative;
+    steps.second = Sign::Negative;
   }
   else if (quartile == 2)
   {
-    steps.first = Negative;
-    steps.second = Positive;
+    steps.first = Sign::Negative;
+    steps.second = Sign::Positive;
   }
   else if (quartile == 3)
   {
-    steps.first = Positive;
-    steps.second = Positive;
+    steps.first = Sign::Positive;
+    steps.second = Sign::Positive;
   }
   else
   {
@@ -72,7 +72,7 @@ bool Horizontal(const int read_y, const float ray_y, const Sign step_y)
 
   const int proposed_y = read_y + step_y;
 
-  if (step_y == Positive)
+  if (Sign::Positive == step_y)
   {
     if (ray_y > proposed_y)
     {
@@ -83,7 +83,7 @@ bool Horizontal(const int read_y, const float ray_y, const Sign step_y)
       horizontal = true;
     }
   }
-  else if (step_y == Negative)
+  else if (Sign::Negative == step_y)
   {
     if (ray_y < proposed_y)
     {
@@ -133,16 +133,16 @@ std::pair<VertexType, Trilean> DesiredVertexHelper(
 
     if (HasEdges(desired_vertex.first, map))
     {
-      desired_vertex.second = True;
+      desired_vertex.second = Trilean::True;
     }
     else
     {
-      desired_vertex.second = False;
+      desired_vertex.second = Trilean::False;
     }
   }
   else
   {
-    desired_vertex.second = Unknown;
+    desired_vertex.second = Trilean::Unknown;
   }
 
   return desired_vertex;
@@ -175,26 +175,26 @@ CardinalDirection DesiredDirectionDiagonal(const SignPair steps) //Based off of 
 {
   CardinalDirection direction;
 
-  if (Positive == steps.first)
+  if (Sign::Positive == steps.first)
   {
-    if (Positive == steps.second) 
+    if (Sign::Positive == steps.second) 
     {
-      direction = NorthEast;
+      direction = CardinalDirection::NorthEast;
     }
-    else if (Negative == steps.second)
+    else if (Sign::Negative == steps.second)
     {
-      direction = SouthEast;
+      direction = CardinalDirection::SouthEast;
     }
   }
-  else if (Negative == steps.first)
+  else if (Sign::Negative == steps.first)
   {
-    if (Positive == steps.second)
+    if (Sign::Positive == steps.second)
     {
-      direction = NorthWest;
+      direction = CardinalDirection::NorthWest;
     }
-    else if (Negative == steps.second)
+    else if (Sign::Negative == steps.second)
     {
-      direction = SouthWest;
+      direction = CardinalDirection::SouthWest;
     }
   }
   
@@ -208,13 +208,13 @@ CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPa
 
   if (horizontal)
   {
-    if (steps.first == Negative)
+    if (Sign::Negative == steps.first)
     {
-      direction = West;
+      direction = CardinalDirection::West;
     }
-    else if (steps.first == Positive)
+    else if (Sign::Positive == steps.first)
     {
-      direction = East;
+      direction = CardinalDirection::East;
     }
     else
     {
@@ -223,13 +223,13 @@ CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPa
   }
   else
   {
-    if (steps.second == Negative)
+    if (Sign::Negative == steps.second)
     {
-      direction = South;
+      direction = CardinalDirection::South;
     }
-    else if (steps.second == Positive)
+    else if (Sign::Positive == steps.second)
     {
-      direction = North;
+      direction = CardinalDirection::North;
     }
     else
     {
@@ -246,13 +246,13 @@ CardinalDirection DesiredDirectionVertical(const SignPair steps) //Same but with
 {
   CardinalDirection direction; 
 
-  if (Positive == steps.second)
+  if (Sign::Positive == steps.second)
   {
-    direction = North;
+    direction = CardinalDirection::North;
   }
-  else if (Negative == steps.second)
+  else if (Sign::Negative == steps.second)
   {
-    direction = South;
+    direction = CardinalDirection::South;
   }
 
   return direction;

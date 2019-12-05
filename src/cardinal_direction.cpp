@@ -1,41 +1,54 @@
 #include "cardinal_direction.h"
 
-CardinalDirection FromNumber(const int num) //Sets the direction depending on the number that was inserted into it
+std::ostream& operator<<(std::ostream& os, const CardinalDirection cardinal_direction)
 {
-  if (num == North)
+  os << "CardinalDirection::";
+
+  switch (cardinal_direction)
   {
-    return North;
+  case CardinalDirection::North:
+  {
+    os << "North";
+    break;
   }
-  else if (num == East)
+  case CardinalDirection::East:
   {
-    return East;
+    os << "East";
+    break;
   }
-  else if (num == South)
+  case CardinalDirection::South:
   {
-    return South;
+    os << "South";
+    break;
   }
-  else if (num == West)
+  case CardinalDirection::West:
   {
-    return West;
+    os << "West";
+    break;
   }
-  else if (num == NorthEast)
+  case CardinalDirection::NorthEast:
   {
-    return NorthEast;
+    os << "NorthEast";
+    break;
   }
-  else if (num == SouthEast)
+  case CardinalDirection::SouthEast:
   {
-    return SouthEast;
+    os << "SouthEast";
+    break;
   }
-  else if (num == SouthWest)
+  case CardinalDirection::SouthWest:
   {
-    return SouthWest;
+    os << "SouthWest";
+    break;
   }
-  else if (num == NorthWest)
+  case CardinalDirection::NorthWest:
   {
-    return NorthWest;
+    os << "NorthWest";
+    break;
   }
-  else
-  {
+  default:
     throw;
   }
+
+  return os;
 }

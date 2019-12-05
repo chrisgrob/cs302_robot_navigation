@@ -25,19 +25,19 @@ const OccupancyGridMap& Robot::get_map() const { return map_; } //get map
 // cast out rays and get sensor readings
 void Robot::RayCasting()
 {
-  if (orientation_ == North) //Calls Ray Range using the degrees reletive to where the robot is facing
+  if (orientation_ == CardinalDirection::North) //Calls Ray Range using the degrees reletive to where the robot is facing
   {
     RayRange(0, 180);
   }
-  else if (orientation_ == East)
+  else if (orientation_ == CardinalDirection::East)
   {
     RayRange(-90, 90);
   }
-  else if (orientation_ == South)
+  else if (orientation_ == CardinalDirection::South)
   {
     RayRange(180, 360);
   }
-  else if (orientation_ == West)
+  else if (orientation_ == CardinalDirection::West)
   {
     RayRange(90, 270);
   }
@@ -105,16 +105,16 @@ void Robot::Cast(const SignPair steps, const int direction)
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_pos, ray_pos, steps, map_);
 
-    if (desired_vertex.second == Unknown) 
+    if (Trilean::Unknown == desired_vertex.second) 
     {
       break;
     }
-    if (desired_vertex.second == False) 
+    if (Trilean::False == desired_vertex.second) 
     {
       UpdateMap(desired_vertex.first, 0.9);
       break;
     }
-    else if (desired_vertex.second == True)
+    else if (Trilean::True == desired_vertex.second)
     {
       UpdateMap(desired_vertex.first, -0.7);
       read_pos = map_.Coordinate(desired_vertex.first);
@@ -146,16 +146,16 @@ void Robot::CastVertical(const SignPair steps)
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge, map_);
 
-    if (desired_vertex.second == Unknown)
+    if (Trilean::Unknown == desired_vertex.second)
     {
       break;
     }
-    if (desired_vertex.second == False)
+    if (Trilean::False == desired_vertex.second)
     {
       UpdateMap(desired_vertex.first, 0.9);
       break;
     }
-    else if (desired_vertex.second == True)
+    else if (Trilean::True == desired_vertex.second)
     {
       UpdateMap(desired_vertex.first, -0.7);
       read_pos = map_.Coordinate(desired_vertex.first);
@@ -187,16 +187,16 @@ void Robot::CastDiagonal(const SignPair steps)
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge, map_);
 
-    if (desired_vertex.second == Unknown)
+    if (Trilean::Unknown == desired_vertex.second)
     {
       break;
     }
-    if (desired_vertex.second == False)
+    if (Trilean::False == desired_vertex.second)
     {
       UpdateMap(desired_vertex.first, 0.9);
       break;
     }
-    else if (desired_vertex.second == True)
+    else if (Trilean::True == desired_vertex.second)
     {
       UpdateMap(desired_vertex.first, -0.7);
       read_pos = map_.Coordinate(desired_vertex.first);
