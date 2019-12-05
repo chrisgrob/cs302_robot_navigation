@@ -284,9 +284,9 @@ CardinalDirection Robot::DesiredDirectionNormal(
 
   const int read_y = read_pos.second;
   const int robot_y = robot_pos.second;
-  const double ray_y = ray_y.second;
+  const double ray_y = ray_pos.second;
 
-  if (ray_y != pos_.second && ray_y == read_y)
+  if (ray_y != robot_y && ray_y == read_y)
   {
     direction = DesiredDirectionDiagonal(steps);
   }

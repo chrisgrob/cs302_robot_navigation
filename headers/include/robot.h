@@ -54,6 +54,12 @@ private:
     const SignPair steps,
     const CastType cast_type); //The desired vertex for where on the map the ray casting is occurring
 
+  CardinalDirection DesiredDirection(
+    const VertexType read_vertex, 
+    const DoubleCoordinateType ray_pos, 
+    const SignPair steps, 
+    const CastType cast_type);
+
   CardinalDirection DesiredDirectionVertical(const SignPair steps);
   CardinalDirection DesiredDirectionDiagonal(const SignPair steps);
   CardinalDirection DesiredDirectionNormal(
