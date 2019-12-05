@@ -37,5 +37,23 @@ private:
   void CastDiagonal(const SignPair steps); //Same but with diagonal
 
   void UpdateMap(VertexType vertex, double sensor_reading); //Updates the map depending on the vertex and the sensor reading of the vertex
+  
+  
+  
+  // Utility functions
+  unsigned int Quartile(const int degrees); //Returns an int for the quartile of wherever the vector is
+  SignPair Steps(const unsigned int quartile); //Returns the sign pair in relation to the quartile
+  bool Horizontal(const int read_y, const float ray_y, const Sign step_y); //Determines whether it can step horizontally or not
+  std::pair<VertexType, Trilean> DesiredVertex(
+    const CoordinateType read_pos, 
+    const FloatCoordinateType ray_pos, 
+    const SignPair steps); //The desired vertex for where on the map the ray casting is occurring
+  std::pair<VertexType, Trilean> DesiredVertexHelper(const std::pair<EdgeType, bool> desired_edge);
+  CardinalDirection DesiredDirection(const int read_y, const double ray_y, const SignPair steps);
+  CardinalDirection DesiredDirectionDiagonal(const SignPair steps);
+  CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPair steps);
+  CardinalDirection DesiredDirectionVertical(const SignPair steps);
+  std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction);
+  bool HasEdges(const VertexType vertex);
 
 };

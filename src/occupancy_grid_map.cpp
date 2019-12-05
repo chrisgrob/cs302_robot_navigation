@@ -26,42 +26,42 @@ OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obst
     if (!VertexIsObstacle(*iter, obstacle)) {
       if (!VertexIsTop(*iter))
       {
-        Connection(*iter, std::make_pair(0, -1));
+        Connection(*iter, std::make_pair(0, -1), CardinalDirection::South);
         
         if (!VertexIsLeftEdge(*iter))
         {
-          Connection(*iter, std::make_pair(-1, -1));
+          Connection(*iter, std::make_pair(-1, -1), CardinalDirection::SouthWest);
         }
 
         if (!VertexIsRightEdge(*iter))
         {
-          Connection(*iter, std::make_pair(1, -1));
+          Connection(*iter, std::make_pair(1, -1), CardinalDirection::SouthEast);
         }
       }
 
       if (!VertexIsRightEdge(*iter))
       {
-        Connection(*iter, std::make_pair(1, 0));
+        Connection(*iter, std::make_pair(1, 0), CardinalDirection::East);
       }
 
       if (!VertexIsBottom(*iter))
       {
-        Connection(*iter, std::make_pair(0, 1));
+        Connection(*iter, std::make_pair(0, 1), CardinalDirection::North);
 
         if (!VertexIsLeftEdge(*iter))
         {
-          Connection(*iter, std::make_pair(-1, 1));
+          Connection(*iter, std::make_pair(-1, 1), CardinalDirection::NorthWest);
         }
 
         if (!VertexIsRightEdge(*iter))
         {
-          Connection(*iter, std::make_pair(1, 1));
+          Connection(*iter, std::make_pair(1, 1), CardinalDirection::NorthEast);
         }
       }
 
       if (!VertexIsLeftEdge(*iter))
       {
-        Connection(*iter, std::make_pair(-1, 0));
+        Connection(*iter, std::make_pair(-1, 0), CardinalDirection::West);
       }
     }
   }
@@ -158,9 +158,33 @@ CoordinateType OccupancyGridMap::Coordinate(const VertexType vertex) const
 
 
 
-void OccupancyGridMap::Visualize() const
+void OccupancyGridMap::VisualizeObstacles() const
 {
-  std::cout << *this << std::endl;
+  IndexType x_pos = 0;
+
+  const VertexRange vertex_range = boost::vertices(map_);
+
+  for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++)
+  {
+    int count = 0;
+    
+    auto out = boost::out_edges(*iter, map_);
+    
+    for (auto iter = out.first; iter != out.second; iter++)
+    {
+      count++;
+    }
+    
+    std::cout << count << " ";
+
+    x_pos++;
+
+    if (x_pos == map_size_)
+    {
+      std::cout << std::endl;
+      x_pos = 0;
+    }
+  }
 }
 
 
@@ -299,7 +323,7 @@ bool OccupancyGridMap::VertexIsRightEdge(const VertexType vertex)
 
 
 
-void OccupancyGridMap::Connection(const VertexType vertex, const CoordinateType coordinate_change)
+void OccupancyGridMap::Connection(const VertexType vertex, const CoordinateType coordinate_change, const CardinalDirection direction)
 {
   const CoordinateType coordinate = Coordinate(vertex);
   const CoordinateType other_coordinate = std::make_pair(
@@ -308,5 +332,9 @@ void OccupancyGridMap::Connection(const VertexType vertex, const CoordinateType 
 
   const VertexType other_vertex = Vertex(other_coordinate);
 
-  boost::add_edge(vertex, other_vertex, map_);
+  std::pair<EdgeType, bool> new_edge = boost::add_edge(vertex, other_vertex, map_);
+  
+  if (new_edge.second) {
+    map_[new_edge.first] = direction;
+  }
 }

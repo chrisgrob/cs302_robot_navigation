@@ -1,8 +1,8 @@
-#include "robot_utils.h"
+#include "robot.h"
 
 // Expects angle to be between 0-360 degrees, call localize on
 // your angle first
-unsigned int Quartile(const int degrees) //Checks which quartile the degree is in
+unsigned int Robot::Quartile(const int degrees) //Checks which quartile the degree is in
 {
   unsigned int quartile;
 
@@ -32,7 +32,7 @@ unsigned int Quartile(const int degrees) //Checks which quartile the degree is i
 
 
 
-SignPair Steps(const unsigned int quartile) //Makes the first and second value equal to whether or not it is positive or negative as a result of the quartile
+SignPair Robot::Steps(const unsigned int quartile) //Makes the first and second value equal to whether or not it is positive or negative as a result of the quartile
 {
   SignPair steps;
 
@@ -66,7 +66,7 @@ SignPair Steps(const unsigned int quartile) //Makes the first and second value e
 
 
 
-bool Horizontal(const int read_y, const float ray_y, const Sign step_y)
+bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
 {
   bool horizontal = false;
 
@@ -100,38 +100,34 @@ bool Horizontal(const int read_y, const float ray_y, const Sign step_y)
 
 
 
-std::pair<VertexType, Trilean> DesiredVertex(
+std::pair<VertexType, Trilean> Robot::DesiredVertex(
   const CoordinateType read_pos, 
   const FloatCoordinateType ray_pos,
-  const SignPair steps, 
-  const OccupancyGridMap& map)
+  const SignPair steps)
 {
   std::pair<VertexType, Trilean> desired_vertex;
 
-  const VertexType this_vertex = map.Vertex(read_pos);
+  const VertexType this_vertex = map_.Vertex(read_pos);
 
   const CardinalDirection desired_direction = DesiredDirection(read_pos.second, ray_pos.second, steps);
-  std::cout << desired_direction << std::endl;
-  const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map);
+  const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction);
 
-  desired_vertex = DesiredVertexHelper(desired_edge, map);
+  desired_vertex = DesiredVertexHelper(desired_edge);
 
   return desired_vertex;
 }
 
 
 
-std::pair<VertexType, Trilean> DesiredVertexHelper(
-  const std::pair<EdgeType, bool> desired_edge, 
-  const OccupancyGridMap& map)
+std::pair<VertexType, Trilean> Robot::DesiredVertexHelper(const std::pair<EdgeType, bool> desired_edge)
 {
   std::pair<VertexType, Trilean> desired_vertex;
 
   if (desired_edge.second)
   {
-    desired_vertex.first = boost::target(desired_edge.first, map.get_map());
+    desired_vertex.first = boost::target(desired_edge.first, map_.get_map());
 
-    if (HasEdges(desired_vertex.first, map))
+    if (HasEdges(desired_vertex.first))
     {
       desired_vertex.second = Trilean::True;
     }
@@ -150,18 +146,16 @@ std::pair<VertexType, Trilean> DesiredVertexHelper(
 
 
 
-CardinalDirection DesiredDirection(const int read_y, const double ray_y, const SignPair steps) //Gets the desired direction from where it wants to ray cast
+CardinalDirection Robot::DesiredDirection(const int read_y, const double ray_y, const SignPair steps) //Gets the desired direction from where it wants to ray cast
 {
   CardinalDirection direction;
 
-  if (ray_y == read_y)
+  if (ray_y != pos_.second && ray_y == read_y)
   {
-    std::cout << "No I got executed" << std::endl;
     direction = DesiredDirectionDiagonal(steps);
   }
   else
   {
-    std::cout << "I got executed" << std::endl;
     bool horizontal = Horizontal(read_y, ray_y, steps.second);
     direction = DesiredDirectionHorizontal(horizontal, steps);
   }
@@ -171,7 +165,7 @@ CardinalDirection DesiredDirection(const int read_y, const double ray_y, const S
 
 
 
-CardinalDirection DesiredDirectionDiagonal(const SignPair steps) //Based off of where it is facing how will it increment
+CardinalDirection Robot::DesiredDirectionDiagonal(const SignPair steps) //Based off of where it is facing how will it increment
 {
   CardinalDirection direction;
 
@@ -202,7 +196,7 @@ CardinalDirection DesiredDirectionDiagonal(const SignPair steps) //Based off of 
 }
 
 
-CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPair steps) //Same as diagonal except horizontal
+CardinalDirection Robot::DesiredDirectionHorizontal(const bool horizontal, const SignPair steps) //Same as diagonal except horizontal
 {
   CardinalDirection direction;
 
@@ -242,7 +236,7 @@ CardinalDirection DesiredDirectionHorizontal(const bool horizontal, const SignPa
 
 
 
-CardinalDirection DesiredDirectionVertical(const SignPair steps) //Same but with vertical
+CardinalDirection Robot::DesiredDirectionVertical(const SignPair steps) //Same but with vertical
 {
   CardinalDirection direction; 
 
@@ -261,16 +255,16 @@ CardinalDirection DesiredDirectionVertical(const SignPair steps) //Same but with
 
 
 
-std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction, const OccupancyGridMap& map)
+std::pair<EdgeType, bool> Robot::DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction)
 { //Returns the desired edge of the pair and tells it where it should be facing for the proper edge
   std::pair<EdgeType, bool> desired_edge;
 
-  const auto available_edges = boost::out_edges(vertex, map.get_map());
+  const auto available_edges = boost::out_edges(vertex, map_.get_map());
 
   for (auto iter = available_edges.first; iter != available_edges.second; iter++)
   {
     // CardinalDirection edge_direction = boost::get(CardinalDirection, map.get_map(), *iter);
-    CardinalDirection edge_direction = map.get_map()[*iter];
+    CardinalDirection edge_direction = map_.get_map()[*iter];
 
     if (edge_direction == desired_direction)
     {
@@ -284,11 +278,11 @@ std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDir
 
 
 
-bool HasEdges(const VertexType vertex, const OccupancyGridMap& map) //Checking if the vertex has edges, useful for determining the path and the ability for the robot to move, raycast, etc.
+bool Robot::HasEdges(const VertexType vertex) //Checking if the vertex has edges, useful for determining the path and the ability for the robot to move, raycast, etc.
 {
   bool has_edges = true;
 
-  const auto edge_range = boost::out_edges(vertex, map.get_map());
+  const auto edge_range = boost::out_edges(vertex, map_.get_map());
 
   if (edge_range.first == edge_range.second)
   {

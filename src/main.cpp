@@ -15,6 +15,7 @@ int main()
 
   robot.RayCasting();
 
+  robot.get_map().VisualizeObstacles();
   std::cout << robot.get_map() << std::endl;
   std::cout << std::endl << std::endl;
 

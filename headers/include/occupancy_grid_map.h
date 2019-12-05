@@ -36,7 +36,7 @@ public:
   void AddToVertex(const VertexType vertex, const double number);
 
 
-  void Visualize() const;
+  void VisualizeObstacles() const;
   friend std::ostream& operator<<(std::ostream& os, const OccupancyGridMap& map); //Outputs the map when using os << map
 
 private:
@@ -48,5 +48,5 @@ private:
   bool VertexIsLeftEdge(const VertexType vertex);
   bool VertexIsRightEdge(const VertexType vertex);
 
-  void Connection(const VertexType vertex, const CoordinateType coordinate_change);
+  void Connection(const VertexType vertex, const CoordinateType coordinate_change, const CardinalDirection direction);
 };

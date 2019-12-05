@@ -1,7 +1,7 @@
 #include "robot.h"
 
 // Default c-tor
-Robot::Robot() : pos_(std::make_pair(0, 0)), orientation_(South) {} 
+Robot::Robot() : pos_(std::make_pair(0, 0)), orientation_(CardinalDirection::South) {} 
 //Sets the X, Y coordinates to 0,0 and facing south
 
 // Parameterized c-tor
@@ -51,14 +51,12 @@ void Robot::RayCasting()
 // start and end should be 180 degrees apart
 void Robot::RayRange(const int start, const int end)
 {
-  /*for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
+  for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
   {
     const int actual_direction = Localize(i); //Sets the direction that the ray is creating between 0-360*
 
     Ray(actual_direction); //Sets the ray to be in the direction that it is facing
-  }*/
-  
-  Ray(0);
+  }
 }
 
 // casts Ray and updates probabilities
@@ -75,17 +73,14 @@ void Robot::Ray(const int direction)
 
   if (vertical)
   {
-    std::cout << "cast vertical" << std::endl;
     CastVertical(steps);
   }
   else if (diagonal) 
   {
-    std::cout << "cast diagonal" << std::endl;
     CastDiagonal(steps);
   }
   else
   {
-    std::cout << "cast" << std::endl;
     Cast(steps, direction);
   }
 }
@@ -95,7 +90,7 @@ void Robot::Cast(const SignPair steps, const int direction)
   const double slope = Slope(direction);
 
   double ray_distance = 0.0;
-  FloatCoordinateType ray_pos = std::make_pair((float)pos_.first, (float)pos_.second);
+  FloatCoordinateType ray_pos = std::make_pair((double)pos_.first, (double)pos_.second);
   CoordinateType read_pos = pos_;
 
   while (ray_distance < 50.0)
@@ -103,7 +98,7 @@ void Robot::Cast(const SignPair steps, const int direction)
     ray_pos.first += steps.first * 1.0;
     ray_pos.second = slope * (ray_pos.first - pos_.first) + pos_.second;
 
-    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_pos, ray_pos, steps, map_);
+    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_pos, ray_pos, steps);
 
     if (Trilean::Unknown == desired_vertex.second) 
     {
@@ -142,9 +137,9 @@ void Robot::CastVertical(const SignPair steps)
 
     const VertexType this_vertex = map_.Vertex(read_pos);
 
-    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map_);
+    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction);
 
-    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge, map_);
+    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge);
 
     if (Trilean::Unknown == desired_vertex.second)
     {
@@ -183,9 +178,9 @@ void Robot::CastDiagonal(const SignPair steps)
 
     const VertexType this_vertex = map_.Vertex(read_pos);
 
-    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction, map_);
+    const std::pair<EdgeType, bool> desired_edge = DesiredEdge(this_vertex, desired_direction);
 
-    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge, map_);
+    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertexHelper(desired_edge);
 
     if (Trilean::Unknown == desired_vertex.second)
     {

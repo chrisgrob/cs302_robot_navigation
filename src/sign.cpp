@@ -1,5 +1,28 @@
 #include "sign.h"
 
+std::ostream& operator<<(std::ostream& os, const Sign sign)
+{
+  os << "Sign::";
+
+  switch (sign)
+  {
+  case Sign::Positive:
+  {
+    os << "Positive";
+    break;
+  }
+  case Sign::Negative:
+  {
+    os << "Negative";
+    break;
+  }
+  default:
+    throw;
+  }
+
+  return os;
+}
+
 int operator+(const Sign sign, const int number)
 {
   int sum;
@@ -14,6 +37,7 @@ int operator+(const Sign sign, const int number)
   case Sign::Negative:
   {
     sum = number - 1;
+    break;
   }
   default:
     throw;
@@ -41,6 +65,7 @@ double operator+(const Sign sign, const double number)
   case Sign::Negative:
   {
     sum = number - 1.0;
+    break;
   }
   default:
     throw;
@@ -68,6 +93,7 @@ int operator*(const Sign sign, const int number)
   case Sign::Negative:
   {
     product = -1 * number;
+    break;
   }
   default:
     throw;
@@ -78,7 +104,7 @@ int operator*(const Sign sign, const int number)
 
 int operator*(const int number, const Sign sign)
 {
-  return operator+(sign, number);
+  return operator*(sign, number);
 }
 
 double operator*(const Sign sign, const double number)
@@ -95,6 +121,7 @@ double operator*(const Sign sign, const double number)
   case Sign::Negative:
   {
     product = -1.0 * number;
+    break;
   }
   default:
     throw;
@@ -105,5 +132,5 @@ double operator*(const Sign sign, const double number)
 
 double operator*(const double number, const Sign sign)
 {
-  return operator(sign, number);
+  return operator*(sign, number);
 }
