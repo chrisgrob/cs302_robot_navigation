@@ -1,30 +1,31 @@
 #include "robot.h"
 
 // Default c-tor
-Robot::Robot() : x_pos_(0), y_pos_(0), orientation_(South) {}
+Robot::Robot() : x_pos_(0), y_pos_(0), orientation_(South) {} 
+//Sets the X, Y coordinates to 0,0 and facing south
 
 // Parameterized c-tor
 Robot::Robot(const CoordinateType pos, const CardinalDirection orientation, const OccupancyGridMap map)
-  : pos_(pos), orientation_(orientation), map_(map) {}
-
+  : pos_(pos), orientation_(orientation), map_(map) {} /
+//Pased off of the cordinate position and orientation, it will make a map and be able to save that map
 
 
 // setters and getters
-void Robot::set_pos(const CoordinateType pos) { pos_ = pos; }
-CoordinateType Robot::get_pos() const { return pos_; }
+void Robot::set_pos(const CoordinateType pos) { pos_ = pos; } //set position
+CoordinateType Robot::get_pos() const { return pos_; } //get position
 
-void Robot::set_orientation(const CardinalDirection orientation) { orientation_ = orientation; }
-CardinalDirection Robot::get_orientation() const { return orienation_; }
+void Robot::set_orientation(const CardinalDirection orientation) { orientation_ = orientation; } //set orientation
+CardinalDirection Robot::get_orientation() const { return orienation_; } //get orientation
 
-void Robot::set_map(const OccupancyGridMap map) { map_ = map; }
-const OccupancyGridMap& Robot::get_map() const { return map_; }
+void Robot::set_map(const OccupancyGridMap map) { map_ = map; } //set map
+const OccupancyGridMap& Robot::get_map() const { return map_; } //get map
 
 
 
 // cast out rays and get sensor readings
 void Robot::RayCasting()
 {
-  if (orientation_ == North)
+  if (orientation_ == North) //Calls Ray Range using the degrees reletive to where the robot is facing
   {
     RayRange(0, 180);
   }
@@ -44,17 +45,17 @@ void Robot::RayCasting()
   {
     throw;
   }
-}
+} //end RayCasting
 
 // casts rays from start to end
 // start and end should be 180 degrees apart
 void Robot::RayRange(const int start, const int end)
 {
-  for (int i = start; i <= end; i += 15)
+  for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
   {
-    const int actual_direction = Localize(i);
+    const int actual_direction = Localize(i); //Sets the direction that the ray is creating between 0-360*
 
-    Ray(actual_direction);
+    Ray(actual_direction); //Sets the ray to be in the direction that it is facing
   }
 }
 
@@ -62,11 +63,11 @@ void Robot::RayRange(const int start, const int end)
 // direction should be from 0 to 359 degrees
 void Robot::Ray(const int direction)
 {
-  const unsigned int quartile = Quartile(direction);
+  const unsigned int quartile = Quartile(direction); //Sets the quartile to be in the direction that it is facing
 
   const SignPair steps = Steps(quartile);
 
-  const bool vertical = (90 == direction) || (270 == direction);
+  const bool vertical = (90 == direction) || (270 == direction); 
 
   const bool diagonal = 0 == direction % 45;
 
@@ -206,7 +207,9 @@ void Robot::CastDiagonal(const SignPair steps)
 
 
 
-void UpdateMap(const VertexType vertex, const double sensor_reading)
+void Robot::UpdateMap(const VertexType vertex, const double sensor_reading)
 {
-
+  
+  map_.AddToVertex(vertex, sensor_reading);
+  
 }

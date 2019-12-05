@@ -3,15 +3,15 @@
 #include "project_utils.h"
 #include "occupancy_grid_map.h"
 
-unsigned int Quartile(const int degrees);
-SignPair Steps(const unsigned int quartile);
-bool Horizontal(const int read_y, const float ray_y, const Sign step_y);
+unsigned int Quartile(const int degrees); //Returns an int for the quartile of wherever the vector is
+SignPair Steps(const unsigned int quartile); //Returns the sign pair in relation to the quartile
+bool Horizontal(const int read_y, const float ray_y, const Sign step_y); //Determines whether it can step horizontally or not
 std::pair<VertexType, Trilean> DesiredVertex(
   const CoordinateType read_pos, 
   const FloatCoordinateType ray_pos, 
   const SignPair steps, 
   const OccupancyGridMap& map
-);
+); //The desired vertex for where on the map the ray casting is occurring
 std::pair<VertexType, Trilean> DesiredVertexHelper(const VertexType vertex, const EdgeType desired_edge, const OccupancyGridMap& map);
 CardinalDirection DesiredDirection(const int read_y, const double ray_y, const SignPair steps);
 CardinalDirection DesiredDirectionDiagonal(const SignPair steps);
