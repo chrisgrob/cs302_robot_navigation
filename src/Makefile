@@ -14,6 +14,7 @@ all: $(TARGETS)
 main: main.o occupancy_grid_map.o robot.o robot_utils.o project_utils.o cardinal_direction.o sign.o
 
 $(TARGETS):
+	mkdir -p $(OUT_PATH)
 	$(CXX) -o $(EXECUTABLE_PATH)/$@ $(^:%.o=$(OUT_PATH)/%.o)  $(LFLAGS)
 
 
