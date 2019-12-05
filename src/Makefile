@@ -11,7 +11,7 @@ TARGETS = main
 
 all: $(TARGETS)
 
-main: main.o
+main: main.o occupancy_grid_map.o robot.o robot_utils.o project_utils.o cardinal_direction.o
 
 $(TARGETS):
 	$(CXX) -o $(EXECUTABLE_PATH)/$@ $(^:%.o=$(OUT_PATH)/%.o)  $(LFLAGS)
@@ -25,10 +25,3 @@ $(TARGETS):
 clean:
 	rm -f *.o *.d
 
-
-# pull in dependency info for *existing* .o files
-# got this hint here: http://scottmcpeak.com/autodepend/autodepend.html
-# except I'm using wildcard instead of a hard list of obj/d files.
-# it's important for this to be after the first rule. Otherwise,
-# make with no arguments will use one of these.
--include $(wildcard *.d)
