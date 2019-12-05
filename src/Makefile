@@ -11,7 +11,7 @@ TARGETS = main
 
 all: $(TARGETS)
 
-main: main.o test_struct.o
+main: main.o
 
 $(TARGETS):
 	$(CXX) -o $(EXECUTABLE_PATH)/$@ $(^:%.o=$(OUT_PATH)/%.o)  $(LFLAGS)
