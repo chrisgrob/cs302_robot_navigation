@@ -7,8 +7,7 @@ class OccupancyGridMap
 {
 private:
   MapType map_; // map of type MapType
-  const IndexType map_size_; // size of the map(dynamic)
-                             // should be set to 10000 for project
+  const IndexType map_size_; // size of the map(dynamic), should be set to 10000 for project
 
 public:
   OccupancyGridMap();

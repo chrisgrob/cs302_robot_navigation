@@ -6,7 +6,7 @@ Robot::Robot() : x_pos_(0), y_pos_(0), orientation_(South) {}
 
 // Parameterized c-tor
 Robot::Robot(const CoordinateType pos, const CardinalDirection orientation, const OccupancyGridMap map)
-  : pos_(pos), orientation_(orientation), map_(map) {} /
+  : pos_(pos), orientation_(orientation), map_(map) {}
 //Pased off of the cordinate position and orientation, it will make a map and be able to save that map
 
 
