@@ -1,13 +1,14 @@
 #pragma once
 
 #include <iostream>
+#include <iomanip>
 #include "project_utils.h"
 
 class OccupancyGridMap
 {
 private:
   MapType map_; // map of type MapType
-  const IndexType map_size_; // size of the map(dynamic), should be set to 10000 for project
+  IndexType map_size_; // size of the map(dynamic), should be set to 10000 for project
 
 public:
   OccupancyGridMap();

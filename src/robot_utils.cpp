@@ -1,10 +1,12 @@
 #include "robot_utils.h"
 
+// Expects angle to be between 0-360 degrees, call localize on
+// your angle first
 unsigned int Quartile(const int degrees) //Checks which quartile the degree is in
 {
   unsigned int quartile;
 
-  if (degrees >= 0 && direction < 90) //First quartile
+  if (degrees >= 0 && degrees < 90) //First quartile
   {
     quartile = 0;
   }
@@ -128,7 +130,7 @@ std::pair<VertexType, Trilean> DesiredVertexHelper(
   {
     desired_vertex.first = boost::target(desired_edge.first, map.get_map());
 
-    if (HasEdges(desired_vertex.first))
+    if (HasEdges(desired_vertex.first, map))
     {
       desired_vertex.second = True;
     }
@@ -157,7 +159,7 @@ CardinalDirection DesiredDirection(const int read_y, const double ray_y, const S
   }
   else
   {
-    horizontal = Horizontal(read_y, ray_y, steps.second);
+    bool horizontal = Horizontal(read_y, ray_y, steps.second);
     direction = DesiredDirectionHorizontal(horizontal, steps);
   }
 
@@ -258,11 +260,12 @@ std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDir
 { //Returns the desired edge of the pair and tells it where it should be facing for the proper edge
   std::pair<EdgeType, bool> desired_edge;
 
-  const EdgeRange available_edges = boost::out_edges(vertex, map.get_map());
+  const auto available_edges = boost::out_edges(vertex, map.get_map());
 
-  for (EdgeIterator iter = available_edges.first; iter != available_edges.second; iter++)
+  for (auto iter = available_edges.first; iter != available_edges.second; iter++)
   {
-    CardinalDirection edge_direction = boost::get(CardinalDirection, map.get_map(), *iter);
+    // CardinalDirection edge_direction = boost::get(CardinalDirection, map.get_map(), *iter);
+    CardinalDirection edge_direction = map.get_map()[*iter];
 
     if (edge_direction == desired_direction)
     {
@@ -276,11 +279,11 @@ std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDir
 
 
 
-bool HasEdges(const VertexType vertex) //Checking if the vertex has edges, useful for determining the path and the ability for the robot to move, raycast, etc.
+bool HasEdges(const VertexType vertex, const OccupancyGridMap& map) //Checking if the vertex has edges, useful for determining the path and the ability for the robot to move, raycast, etc.
 {
   bool has_edges = true;
 
-  const auto edge_range = boost::out(vertex);
+  const auto edge_range = boost::out_edges(vertex, map.get_map());
 
   if (edge_range.first == edge_range.second)
   {

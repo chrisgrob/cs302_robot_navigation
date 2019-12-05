@@ -1,7 +1,7 @@
 #include "robot.h"
 
 // Default c-tor
-Robot::Robot() : x_pos_(0), y_pos_(0), orientation_(South) {} 
+Robot::Robot() : pos_(std::make_pair(0, 0)), orientation_(South) {} 
 //Sets the X, Y coordinates to 0,0 and facing south
 
 // Parameterized c-tor
@@ -15,7 +15,7 @@ void Robot::set_pos(const CoordinateType pos) { pos_ = pos; } //set position
 CoordinateType Robot::get_pos() const { return pos_; } //get position
 
 void Robot::set_orientation(const CardinalDirection orientation) { orientation_ = orientation; } //set orientation
-CardinalDirection Robot::get_orientation() const { return orienation_; } //get orientation
+CardinalDirection Robot::get_orientation() const { return orientation_; } //get orientation
 
 void Robot::set_map(const OccupancyGridMap map) { map_ = map; } //set map
 const OccupancyGridMap& Robot::get_map() const { return map_; } //get map
@@ -90,8 +90,8 @@ void Robot::Cast(const SignPair steps, const int direction)
   const double slope = Slope(direction);
 
   double ray_distance = 0.0;
-  auto ray_pos = std::make_pair((float)x_pos_, (float)y_pos_);
-  auto read_pos = std::make_pair(x_pos_, y_pos_);
+  auto ray_pos = std::make_pair((float)pos_.first, (float)pos_.second);
+  auto read_pos = pos_;
 
   while (ray_distance < 50.0)
   {
@@ -112,14 +112,14 @@ void Robot::Cast(const SignPair steps, const int direction)
     else if (desired_vertex.second == True)
     {
       UpdateMap(desired_vertex.first, 0.7);
-      read_pos = map_.Coordinate(desired_vertex.first)
+      read_pos = map_.Coordinate(desired_vertex.first);
     }
     else
     {
       throw;
     }
 
-    ray_distance = VectorMagnitude(std::make_pair(ray_pos.first - x_pos_, ray_pos.second - y_pos_));
+    ray_distance = VectorMagnitude(std::make_pair(ray_pos.first - pos_.first, ray_pos.second - pos_.second));
   }
 }
 
@@ -153,7 +153,7 @@ void Robot::CastVertical(const SignPair steps)
     else if (desired_vertex.second == True)
     {
       UpdateMap(desired_vertex.first, 0.7);
-      read_pos = map_.Coordinate(desired_vertex.first)
+      read_pos = map_.Coordinate(desired_vertex.first);
     }
     else
     {
@@ -194,7 +194,7 @@ void Robot::CastDiagonal(const SignPair steps)
     else if (desired_vertex.second == True)
     {
       UpdateMap(desired_vertex.first, -0.7);
-      read_pos = map_.Coordinate(desired_vertex.first)
+      read_pos = map_.Coordinate(desired_vertex.first);
     }
     else
     {

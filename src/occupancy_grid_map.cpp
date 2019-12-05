@@ -18,9 +18,9 @@ OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obst
 
   map_ = MapType(map_size * map_size);
 	
-	VertexRange vertex_range = boost::vertices(graph);
+  VertexRange vertex_range = boost::vertices(map_);
 	
-	for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++) {
+  for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++) {
     map_[*iter] = 0; // Initial probabilities are 50/50, which in logodd terms means 0
     
     if (!VertexIsObstacle(*iter, obstacle)) {
@@ -63,16 +63,16 @@ OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obst
       {
         Connection(*iter, std::make_pair(-1, 0));
       }
-		}
-	}
+    }
+  }
 }
 
 
 
 OccupancyGridMap::OccupancyGridMap(const OccupancyGridMap & other)
 {
-  map_size_ = other.map_size_
-	map_ = other.map_;
+  map_size_ = other.map_size_;
+  map_ = other.map_;
 }
 
 
@@ -177,10 +177,12 @@ void OccupancyGridMap::Visualize(std::ostream& os) const
   IndexType x_pos = 0;
 
   const VertexRange vertex_range = boost::vertices(map_);
+  
+  os << std::fixed << std::setprecision(1) << std::setfill(' ');
 
   for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++)
   {
-    os << map_[*iter] << " ";
+    os << std::setw(5) << map_[*iter] << " ";
 
     x_pos++;
 

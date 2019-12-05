@@ -32,6 +32,9 @@ typedef std::pair<EdgeIterator, EdgeIterator> EdgeRange;
 typedef int IndexType;
 
 
+const double pi = 3.14159265358979323846; //value of pi
+
+
 struct Obstacle //Creates an obstacle based off the min and max x positiona nd the min and max y position
 {
   Obstacle(const int x_min_p, const int x_max_p, const int y_min_p, const int y_max_p);

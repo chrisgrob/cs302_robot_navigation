@@ -4,8 +4,6 @@
 #include "occupancy_grid_map.h"
 #include "robot_utils.h"
 
-const double pi = 3.14159265358979323846; //value of pi
-
 class Robot
 {
 private:
