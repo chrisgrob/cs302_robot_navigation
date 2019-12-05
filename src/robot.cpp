@@ -80,14 +80,17 @@ void Robot::Ray(const int direction)
   if (vertical)
   {
     cast_type = CastType::Vertical;
+    std::cout << "CastType::Vertical" << std::endl;
   }
   else if (diagonal) 
   {
     cast_type = CastType::Diagonal;
+    std::cout << "CastType::Diagonal" << std::endl;
   }
   else
   {
     cast_type = CastType::Normal;
+    std::cout << "CastType::Normal" << std::endl;
   }
 
   Cast(steps, direction, cast_type);
@@ -107,6 +110,9 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
     ray_pos = RayIncrement(ray_pos, direction, steps, cast_type);
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
+    
+    std::cout << read_vertex << std::endl;
+    std::cout << desired_vertex.first << std::endl;
 
     switch (desired_vertex.second)
     {
@@ -181,7 +187,7 @@ std::pair<VertexType, Trilean> Robot::DesiredVertex(
 {
 
   const CardinalDirection desired_direction = DesiredDirection(read_vertex, ray_pos, steps, cast_type);
-  const std::pair<EdgeType, bool> desired_edge = DesiredEdge(occupied_vertex_, desired_direction);
+  const std::pair<EdgeType, bool> desired_edge = DesiredEdge(read_vertex, desired_direction);
 
   return VertexFromEdge(desired_edge);
 }
@@ -213,6 +219,8 @@ CardinalDirection Robot::DesiredDirection(
     desired_direction = DesiredDirectionNormal(read_vertex, ray_pos, steps);
     break;
   }
+  default:
+    throw;
   }
 
   return desired_direction;
@@ -225,13 +233,20 @@ CardinalDirection Robot::DesiredDirectionVertical(const SignPair steps)
 {
   CardinalDirection direction;
 
-  if (Sign::Positive == steps.second)
+  switch (steps.second)
+  {
+  case Sign::Positive:
   {
     direction = CardinalDirection::North;
+    break;
   }
-  else if (Sign::Negative == steps.second)
+  case Sign::Negative:
   {
     direction = CardinalDirection::South;
+    break;
+  }
+  default:
+    throw;
   }
 
   return direction;
@@ -243,27 +258,50 @@ CardinalDirection Robot::DesiredDirectionDiagonal(const SignPair steps)
 {
   CardinalDirection direction;
 
-  if (Sign::Positive == steps.first)
+  switch (steps.first)
   {
-    if (Sign::Positive == steps.second)
+  case Sign::Positive:
+  {
+    switch (steps.second)
+    {
+    case Sign::Positive:
     {
       direction = CardinalDirection::NorthEast;
+      break;
     }
-    else if (Sign::Negative == steps.second)
+    case Sign::Negative:
     {
       direction = CardinalDirection::SouthEast;
+      break;
     }
+    default:
+      throw;
+    }
+    
+    break;
   }
-  else if (Sign::Negative == steps.first)
+  case Sign::Negative:
   {
-    if (Sign::Positive == steps.second)
+    switch (steps.second)
+    {
+    case Sign::Positive:
     {
       direction = CardinalDirection::NorthWest;
+      break;
     }
-    else if (Sign::Negative == steps.second)
+    case Sign::Negative:
     {
       direction = CardinalDirection::SouthWest;
+      break;
     }
+    default:
+      throw;
+    }
+    
+    break;
+  }
+  default:
+    throw;
   }
 
   return direction;
@@ -340,6 +378,32 @@ CardinalDirection Robot::DesiredDirectionAxis(const int read_y, const double ray
 
   return direction;
 }
+
+
+
+std::pair<EdgeType, bool> Robot::DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction)
+{ //Returns the desired edge of the pair and tells it where it should be facing for the proper edge
+  std::pair<EdgeType, bool> desired_edge;
+  
+  desired_edge.second = false;
+
+  const auto available_edges = boost::out_edges(vertex, map_.get_map());
+
+  for (auto iter = available_edges.first; iter != available_edges.second; iter++)
+  {
+    // CardinalDirection edge_direction = boost::get(CardinalDirection, map.get_map(), *iter);
+    CardinalDirection edge_direction = map_.get_map()[*iter];
+
+    if (edge_direction == desired_direction)
+    {
+      desired_edge.first = *iter;
+      desired_edge.second = true;
+    }
+  }
+
+  return desired_edge;
+}
+
 
 
 

@@ -70,6 +70,8 @@ private:
   // Helper for DesiredDirectionNormal()
   CardinalDirection DesiredDirectionAxis(const int read_y, const double ray_y, const SignPair steps);
 
+  std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction);
+
   std::pair<VertexType, Trilean> VertexFromEdge(const std::pair<EdgeType, bool> desired_edge);
 
 

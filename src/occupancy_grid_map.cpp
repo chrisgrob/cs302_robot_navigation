@@ -91,6 +91,13 @@ const MapType& OccupancyGridMap::get_map() const
 
 
 
+MapType& OccupancyGridMap::get_map()
+{
+  return map_;
+}
+
+
+
 IndexType OccupancyGridMap::get_map_size() const
 {
   return map_size_;

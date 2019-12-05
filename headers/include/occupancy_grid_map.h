@@ -19,6 +19,7 @@ public:
   // setters and getters for map
   void set_map(const MapType map);
   const MapType& get_map() const;
+  MapType& get_map();
 
   // getter for map size
   IndexType get_map_size() const;
