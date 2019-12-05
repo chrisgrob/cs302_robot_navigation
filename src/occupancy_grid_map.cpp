@@ -192,6 +192,8 @@ void OccupancyGridMap::VisualizeObstacles() const
 std::ostream& operator<<(std::ostream& os, const OccupancyGridMap& map)
 {
   map.Visualize(os);
+  
+  return os;
 }
 
 
