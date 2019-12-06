@@ -364,11 +364,11 @@ CardinalDirection Robot::DesiredDirectionAxis(const int read_y, const double ray
   {
     if (Sign::Negative == steps.second)
     {
-      direction = CardinalDirection::South;
+      direction = CardinalDirection::North;
     }
     else if (Sign::Positive == steps.second)
     {
-      direction = CardinalDirection::North;
+      direction = CardinalDirection::South;
     }
     else
     {
