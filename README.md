@@ -4,31 +4,40 @@ Project specifications: https://www.autonomousrobotslab.com/uploads/5/8/4/4/5844
 
 Due Date: 12/6/19
 
-This project simulates a drone that must use occupancy grid mapping to figure out it's surroundings.
+This project simulates a drone that must use occupancy grid mapping to figure out its surroundings.
 
 ## Installation instructions
 Clone the repository into your computer with the following command:
 ```console
-myusername:~$ git clone https://github.com/chrisgrob/cs302_robot_navigation
+git clone https://github.com/chrisgrob/cs302_robot_navigation
 ```
-This program requires that the [boost](https://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html) be installed somewhere on your computer After this you must specify the path where boost is installed (If you are a T.A. this will be done for you, and you can just make). This will be the folder in which the *contents* of boost are located (boost, docs, libs, more, etc.).
+This program requires that the [boost](https://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html) library be installed somewhere on your computer(if you are a T.A. do not worry about this as boost will be shipped with the repository, simply make the program).
 
-To specify this path, run the following:
-```console
-myusername:~$ export DEPENDENCY_PATH=~/path/to/my/dependencies
-```
-Alternatively, you may put the contents of the boost library into the headers/dependencies folder in your project.
+Once boost is installed you must either specify the path where the *contents* of the library are (boost, doc, libs, etc.) **OR** you must place these contents into the /headers/dependencies folder in this project. To avoid being spammed with warnings that relate to the library and not this project, do not place boost into the /headers/include folder.
 
-Once this is done, you may compile the program by running make:
+### Specifying the dependency path
+To specify the path, run the following:
 ```console
-myusername:~$ make
+echo ~/path/to/my/dependencies > config_path.txt
 ```
-And you may run the program by running:
+You may specify a new path by running the command again with a different path, and may unset the path by deleting config_path.txt.
+
+### Compiling
+To compile the program you may simply run make:
 ```console
-myusername:~$ ./main
+make
 ```
 
+### Running
+You may run the program with:
+```console
+./main
+```
+This will output a 10,000 by 10,000 map with the probability of being taken for each cell.
+
+### Uninstalling
 You may delete the compiled binaries and the program by running:
 ```console
 make clean
 ```
+To uninstall the whole program simply delete the entire folder
