@@ -68,11 +68,13 @@ SignPair Robot::Steps(const unsigned int quartile) //Makes the first and second 
 
 bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
 {
-  bool horizontal = false;
+  bool horizontal;
 
   const int proposed_y = read_y + step_y;
 
-  if (Sign::Positive == step_y)
+  switch (step_y)
+  {
+  case Sign::Positive:
   {
     if (ray_y > proposed_y)
     {
@@ -82,8 +84,14 @@ bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
     {
       horizontal = true;
     }
+    else
+    {
+      throw;
+    }
+    
+    break;
   }
-  else if (Sign::Negative == step_y)
+  case Sign::Negative:
   {
     if (ray_y < proposed_y)
     {
@@ -93,6 +101,15 @@ bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
     {
       horizontal = true;
     }
+    else
+    {
+      throw;
+    }
+    
+    break;
+  }
+  default:
+    throw;
   }
 
   return horizontal;
