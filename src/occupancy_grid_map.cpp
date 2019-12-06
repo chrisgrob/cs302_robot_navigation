@@ -26,16 +26,16 @@ OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obst
     if (!VertexIsObstacle(*iter, obstacle)) {
       if (!VertexIsTop(*iter))
       {
-        Connection(*iter, std::make_pair(0, -1), CardinalDirection::South);
+        Connection(*iter, std::make_pair(0, -1), CardinalDirection::North);
         
         if (!VertexIsLeftEdge(*iter))
         {
-          Connection(*iter, std::make_pair(-1, -1), CardinalDirection::SouthWest);
+          Connection(*iter, std::make_pair(-1, -1), CardinalDirection::NorthWest);
         }
 
         if (!VertexIsRightEdge(*iter))
         {
-          Connection(*iter, std::make_pair(1, -1), CardinalDirection::SouthEast);
+          Connection(*iter, std::make_pair(1, -1), CardinalDirection::NorthEast);
         }
       }
 
@@ -46,16 +46,16 @@ OccupancyGridMap::OccupancyGridMap(const IndexType map_size, const Obstacle obst
 
       if (!VertexIsBottom(*iter))
       {
-        Connection(*iter, std::make_pair(0, 1), CardinalDirection::North);
+        Connection(*iter, std::make_pair(0, 1), CardinalDirection::South);
 
         if (!VertexIsLeftEdge(*iter))
         {
-          Connection(*iter, std::make_pair(-1, 1), CardinalDirection::NorthWest);
+          Connection(*iter, std::make_pair(-1, 1), CardinalDirection::SouthWest);
         }
 
         if (!VertexIsRightEdge(*iter))
         {
-          Connection(*iter, std::make_pair(1, 1), CardinalDirection::NorthEast);
+          Connection(*iter, std::make_pair(1, 1), CardinalDirection::SouthEast);
         }
       }
 

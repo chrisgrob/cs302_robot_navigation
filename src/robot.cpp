@@ -53,12 +53,14 @@ void Robot::RayCasting()
 // start and end should be 180 degrees apart
 void Robot::RayRange(const int start, const int end)
 {
-  for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
+  /*for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
   {
     const int actual_direction = Localize(i); //Sets the direction that the ray is creating between 0-360*
 
     Ray(actual_direction); //Sets the ray to be in the direction that it is facing
-  }
+  }*/
+  
+  Ray(0);
 }
 
 
@@ -110,9 +112,6 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
     ray_pos = RayIncrement(ray_pos, direction, steps, cast_type);
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
-    
-    std::cout << read_vertex << std::endl;
-    std::cout << desired_vertex.first << std::endl;
 
     switch (desired_vertex.second)
     {
@@ -187,6 +186,7 @@ std::pair<VertexType, Trilean> Robot::DesiredVertex(
 {
 
   const CardinalDirection desired_direction = DesiredDirection(read_vertex, ray_pos, steps, cast_type);
+  std::cout << desired_direction << std::endl;
   const std::pair<EdgeType, bool> desired_edge = DesiredEdge(read_vertex, desired_direction);
 
   return VertexFromEdge(desired_edge);
