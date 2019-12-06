@@ -1,6 +1,7 @@
 EXECUTABLE_PATH=..
 INCLUDE_PATH=../headers/include
 PROJECT_DEPENDENCY_PATH=../headers/dependencies
+DEPENDENCY_PATH := $(shell cat ../config_path.txt)
 OUT_PATH=../bin
 
 CXX = g++

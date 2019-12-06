@@ -11,7 +11,7 @@ Clone the repository into your computer with the following command:
 ```console
 myusername:~$ git clone https://github.com/chrisgrob/cs302_robot_navigation
 ```
-Now install the [boost](https://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html) After this you must specify the path where boost is installed (If you are a T.A. this will be done for you, and you can just make). This will be the folder in which the *contents* of boost are located (boost, docs, libs, more, etc.).
+This program requires that the [boost](https://www.boost.org/doc/libs/1_66_0/more/getting_started/unix-variants.html) be installed somewhere on your computer After this you must specify the path where boost is installed (If you are a T.A. this will be done for you, and you can just make). This will be the folder in which the *contents* of boost are located (boost, docs, libs, more, etc.).
 
 To specify this path, run the following:
 ```console
