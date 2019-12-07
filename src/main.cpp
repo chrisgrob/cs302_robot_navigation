@@ -38,22 +38,22 @@ int main()
   robot.RayCasting();
   
   // 6
-  robot.set_pos(98, 678);
+  robot.set_pos(std::make_pair(98, 678));
   robot.set_orientation(CardinalDirection::East);
   robot.RayCasting();
   
   // 7
-  robot.set_pos(377, 606);
+  robot.set_pos(std::make_pair(377, 606));
   robot.set_orientation(CardinalDirection::North);
   robot.RayCasting();
   
   // 8
-  robot.set_pos(657, 434);
+  robot.set_pos(std::make_pair(657, 434));
   robot.set_orientation(CardinalDirection::West);
   robot.RayCasting();
   
   // 9
-  robot.set_pos(682, 215);
+  robot.set_pos(std::make_pair(682, 215));
   robot.set_orientation(CardinalDirection::North);
   robot.RayCasting();
 
@@ -61,8 +61,8 @@ int main()
   std::cout << std::endl << std::endl;
   
   // 10th measurement
-  robot.set_pos(999, 999);
-  robot.set_orientation(CardinalDirectoin::North);
+  robot.set_pos(std::make_pair(999, 999));
+  robot.set_orientation(CardinalDirection::North);
   robot.RayCasting();
 
   return 0;
