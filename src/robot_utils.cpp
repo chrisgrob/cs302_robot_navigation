@@ -152,3 +152,22 @@ CoordinateType Robot::RelativeReadPos(const VertexType read_vertex)
     robot_pos.second - read_pos.second);
 }
 
+
+
+bool Robot::XIncrement(const CardinalDirection direction)
+{
+  bool x_increment = true;
+  
+  switch (direction)
+  {
+  case CardinalDirection::North:
+  case CardinalDirection::South:
+    x_increment = false;
+    break;
+  default:
+    break;
+  }
+  
+  return x_increment;
+}
+

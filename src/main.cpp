@@ -11,11 +11,10 @@ int main()
 
   OccupancyGridMap robot_map = OccupancyGridMap(map_size, obstacle);
 
-  Robot robot = Robot(std::make_pair(7, 7), CardinalDirection::North, robot_map);
+  Robot robot = Robot(std::make_pair(7, 7), CardinalDirection::West, robot_map);
 
   robot.RayCasting();
 
-  robot.get_map().VisualizeObstacles();
   std::cout << robot.get_map() << std::endl;
   std::cout << std::endl << std::endl;
 

@@ -215,7 +215,7 @@ void OccupancyGridMap::Visualize(std::ostream& os) const
 
   for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++)
   {
-    os << std::setw(5) << map_[*iter] << " ";
+    os << std::setw(6) << map_[*iter] << " ";
 
     x_pos++;
 

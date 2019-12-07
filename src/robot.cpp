@@ -53,14 +53,12 @@ void Robot::RayCasting()
 // start and end should be 180 degrees apart
 void Robot::RayRange(const int start, const int end)
 {
-  /*for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
+  for (int i = start; i <= end; i += 15) //start and end are the degrees to which it should be checking
   {
     const int actual_direction = Localize(i); //Sets the direction that the ray is creating between 0-360*
 
     Ray(actual_direction); //Sets the ray to be in the direction that it is facing
-  }*/
-  
-  Ray(60);
+  }
 }
 
 
@@ -82,17 +80,14 @@ void Robot::Ray(const int direction)
   if (vertical)
   {
     cast_type = CastType::Vertical;
-    std::cout << "CastType::Vertical" << std::endl;
   }
   else if (diagonal) 
   {
     cast_type = CastType::Diagonal;
-    std::cout << "CastType::Diagonal" << std::endl;
   }
   else
   {
     cast_type = CastType::Normal;
-    std::cout << "CastType::Normal" << std::endl;
   }
 
   Cast(steps, direction, cast_type);
@@ -106,16 +101,17 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
   DoubleCoordinateType ray_pos = std::make_pair(0.0, 0.0);
   VertexType read_vertex = occupied_vertex_;
   bool obstructed = false;
+  bool x_increment = false;
 
   while (ray_distance < 50.0 && !obstructed)
   {
-    ray_pos = RayIncrement(ray_pos, direction, steps, cast_type);
+    ray_pos = RayIncrement(ray_pos, direction, steps, x_increment, cast_type);
+
+    const std::tuple<VertexType, Trilean, bool> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
     
-    std::cout << "This vertex: " << read_vertex << std::endl;
+    x_increment = std::get<2>(desired_vertex);
 
-    const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
-
-    switch (desired_vertex.second)
+    switch (std::get<1>(desired_vertex))
     {
     case Trilean::Unknown:
     {
@@ -124,14 +120,14 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
     }
     case Trilean::False:
     {
-      UpdateMap(desired_vertex.first, 0.9);
+      UpdateMap(std::get<0>(desired_vertex), 0.9);
       obstructed = true;
       break;
     }
     case Trilean::True:
     {
-      UpdateMap(desired_vertex.first, -0.7);
-      read_vertex = desired_vertex.first;
+      UpdateMap(std::get<0>(desired_vertex), -0.7);
+      read_vertex = std::get<0>(desired_vertex);
       break;
     }
     }
@@ -146,6 +142,7 @@ DoubleCoordinateType Robot::RayIncrement(
   const DoubleCoordinateType ray_pos, 
   const int direction, 
   const SignPair steps, 
+  const bool x_increment,
   CastType cast_type)
 {
   DoubleCoordinateType ray_increment = ray_pos;
@@ -165,11 +162,13 @@ DoubleCoordinateType Robot::RayIncrement(
   }
   case CastType::Normal:
   {
-    ray_increment.first += steps.first * 1.0;
+    if (x_increment) {
+      ray_increment.first += steps.first * 1.0;
 
-    const double slope = Slope(direction);
+      const double slope = Slope(direction);
 
-    ray_increment.second = slope * ray_increment.first;
+      ray_increment.second = slope * ray_increment.first;
+    }
     break;
   }
   }
@@ -180,7 +179,7 @@ DoubleCoordinateType Robot::RayIncrement(
 
 
 // Main helper for Cast()
-std::pair<VertexType, Trilean> Robot::DesiredVertex(
+std::tuple<VertexType, Trilean, bool> Robot::DesiredVertex(
   const VertexType read_vertex,
   const DoubleCoordinateType ray_pos,
   const SignPair steps,
@@ -188,10 +187,15 @@ std::pair<VertexType, Trilean> Robot::DesiredVertex(
 {
 
   const CardinalDirection desired_direction = DesiredDirection(read_vertex, ray_pos, steps, cast_type);
-  std::cout << desired_direction << std::endl;
   const std::pair<EdgeType, bool> desired_edge = DesiredEdge(read_vertex, desired_direction);
 
-  return VertexFromEdge(desired_edge);
+  const bool x_increment = XIncrement(desired_direction);
+
+  const std::pair<VertexType, Trilean> vertex_from_edge = VertexFromEdge(desired_edge);
+  return std::make_tuple(
+    vertex_from_edge.first,
+    vertex_from_edge.second,
+    x_increment);
 }
 
 
@@ -237,12 +241,12 @@ CardinalDirection Robot::DesiredDirectionVertical(const SignPair steps)
 
   switch (steps.second)
   {
-  case Sign::Positive:
+  case Sign::Negative:
   {
     direction = CardinalDirection::North;
     break;
   }
-  case Sign::Negative:
+  case Sign::Positive:
   {
     direction = CardinalDirection::South;
     break;
@@ -266,12 +270,12 @@ CardinalDirection Robot::DesiredDirectionDiagonal(const SignPair steps)
   {
     switch (steps.second)
     {
-    case Sign::Positive:
+    case Sign::Negative:
     {
       direction = CardinalDirection::NorthEast;
       break;
     }
-    case Sign::Negative:
+    case Sign::Positive:
     {
       direction = CardinalDirection::SouthEast;
       break;
@@ -286,12 +290,12 @@ CardinalDirection Robot::DesiredDirectionDiagonal(const SignPair steps)
   {
     switch (steps.second)
     {
-    case Sign::Positive:
+    case Sign::Negative:
     {
       direction = CardinalDirection::NorthWest;
       break;
     }
-    case Sign::Negative:
+    case Sign::Positive:
     {
       direction = CardinalDirection::SouthWest;
       break;

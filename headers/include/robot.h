@@ -46,9 +46,10 @@ private:
     const DoubleCoordinateType ray_pos, 
     const int direction, 
     const SignPair steps, 
+    const bool x_increment,
     const CastType cast_type);
 
-  std::pair<VertexType, Trilean> DesiredVertex(
+  std::tuple<VertexType, Trilean, bool> DesiredVertex(
     const VertexType read_vertex,
     const DoubleCoordinateType ray_pos,
     const SignPair steps,
@@ -87,5 +88,6 @@ private:
   bool IsFree(const VertexType vertex);
   bool HasEdges(const VertexType vertex);
   CoordinateType RelativeReadPos(const VertexType read_vertex);
+  bool XIncrement(const CardinalDirection direction);
 
 };
