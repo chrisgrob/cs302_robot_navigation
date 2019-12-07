@@ -33,7 +33,7 @@ You may run the program with:
 ```console
 ./main
 ```
-This will output a 10,000 by 10,000 map with the probability of being taken for each cell.
+This will output a 1000 by 1000 map with the probability of being taken for each cell.
 
 ### Uninstalling
 You may delete the compiled binaries and the program by running:
