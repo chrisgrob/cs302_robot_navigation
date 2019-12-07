@@ -70,11 +70,11 @@ bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
 {
   bool horizontal;
 
-  const int proposed_y = read_y + step_y;
+  const int proposed_y = read_y + (-1 * step_y);
 
   switch (step_y)
   {
-  case Sign::Positive:
+  case Sign::Negative:
   {
     if (ray_y > proposed_y)
     {
@@ -91,7 +91,7 @@ bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
     
     break;
   }
-  case Sign::Negative:
+  case Sign::Positive:
   {
     if (ray_y < proposed_y)
     {
@@ -137,5 +137,18 @@ bool Robot::HasEdges(const VertexType vertex)
   }
 
   return has_edges;
+}
+
+
+
+// Determining the relative coordinate of the read vertex given the robot's vertex and orientation
+CoordinateType Robot::RelativeReadPos(const VertexType read_vertex)
+{  
+  CoordinateType robot_pos = map_.Coordinate(occupied_vertex_);
+  CoordinateType read_pos = map_.Coordinate(read_vertex);
+  
+  return std::make_pair(
+    read_pos.first - robot_pos.first,
+    robot_pos.second - read_pos.second);
 }
 

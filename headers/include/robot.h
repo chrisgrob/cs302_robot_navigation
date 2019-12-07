@@ -86,5 +86,6 @@ private:
   bool Horizontal(const int read_y, const float ray_y, const Sign step_y); //Determines whether it can step horizontally or not
   bool IsFree(const VertexType vertex);
   bool HasEdges(const VertexType vertex);
+  CoordinateType RelativeReadPos(const VertexType read_vertex);
 
 };

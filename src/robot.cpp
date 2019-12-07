@@ -60,7 +60,7 @@ void Robot::RayRange(const int start, const int end)
     Ray(actual_direction); //Sets the ray to be in the direction that it is facing
   }*/
   
-  Ray(0);
+  Ray(60);
 }
 
 
@@ -110,6 +110,8 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
   while (ray_distance < 50.0 && !obstructed)
   {
     ray_pos = RayIncrement(ray_pos, direction, steps, cast_type);
+    
+    std::cout << "This vertex: " << read_vertex << std::endl;
 
     const std::pair<VertexType, Trilean> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
 
@@ -317,13 +319,13 @@ CardinalDirection Robot::DesiredDirectionNormal(
 {
   CardinalDirection direction;
 
-  const CoordinateType read_pos = map_.Coordinate(read_vertex);
+  const CoordinateType read_pos = RelativeReadPos(read_vertex);
   const CoordinateType robot_pos = get_pos();
 
   const int read_y = read_pos.second;
   const int robot_y = robot_pos.second;
   const double ray_y = ray_pos.second;
-  const int proposed_y = read_y + steps.second;
+  const int proposed_y = read_y + (-1 * steps.second);
 
   if (ray_y != robot_y && ray_y == proposed_y)
   {
@@ -412,7 +414,7 @@ std::pair<VertexType, Trilean> Robot::VertexFromEdge(const std::pair<EdgeType, b
 {
   std::pair<VertexType, Trilean> vertex_from_edge;
 
-  if (edge.second)
+  if (edge.second) 
   {
     vertex_from_edge.first = boost::target(edge.first, map_.get_map());
 
@@ -442,3 +444,4 @@ void Robot::UpdateMap(const VertexType vertex, const double sensor_reading)
   map_.AddToVertex(vertex, sensor_reading);
   
 }
+
