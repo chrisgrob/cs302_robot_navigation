@@ -17,7 +17,7 @@ main: main.o occupancy_grid_map.o robot.o robot_utils.o project_utils.o cardinal
 
 $(TARGETS):
 	mkdir -p $(OUT_PATH)
-	$(CXX) -o $(EXECUTABLE_PATH)/$@ $(^:%.o=$(OUT_PATH)/%.o)  $(LFLAGS)
+	$(CXX) -o $(EXECUTABLE_PATH)/$@ $(^:%.o=$(OUT_PATH)/%.o) $(CFLAGS) $(LFLAGS)
 
 
 %.o: %.cpp
