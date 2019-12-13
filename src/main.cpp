@@ -58,7 +58,7 @@ int main()
   robot.set_orientation(CardinalDirection::North);
   robot.RayCasting();
 
-  std::ofstream out_file = std::ofstream("probabilties.txt");
+  std::ofstream out_file = std::ofstream("probabilities.txt");
   robot.get_map().VisualizeProbabilities(out_file);
   
   // 10th measurement
