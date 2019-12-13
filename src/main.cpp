@@ -3,6 +3,7 @@
 #include "occupancy_grid_map.h"
 
 #include <iostream>
+#include <fstream>
 
 int main()
 {
@@ -57,8 +58,8 @@ int main()
   robot.set_orientation(CardinalDirection::North);
   robot.RayCasting();
 
-  std::cout << robot.get_map() << std::endl;
-  std::cout << std::endl << std::endl;
+  std::ofstream out_file = std::ofstream("probabilties.txt");
+  robot.get_map().VisualizeProbabilities(out_file);
   
   // 10th measurement
   robot.set_pos(std::make_pair(999, 999));

@@ -229,6 +229,28 @@ void OccupancyGridMap::Visualize(std::ostream& os) const
 
 
 
+void OccupancyGridMap::VisualizeProbabilities(std::ostream& os) const
+{
+  IndexType x_pos = 0;
+
+  const VertexRange vertex_range = boost::vertices(map_);
+
+  for (VertexIterator iter = vertex_range.first; iter != vertex_range.second; iter++)
+  {
+    os << prob(map_[*iter]) << " ";
+
+    x_pos++;
+
+    if (x_pos == map_size_)
+    {
+      os << std::endl;
+      x_pos = 0;
+    }
+  }
+}
+
+
+
 bool OccupancyGridMap::VertexIsObstacle(const VertexType vertex, const Obstacle obstacle)
 {
   bool vertex_is_obstacle;

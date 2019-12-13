@@ -40,6 +40,8 @@ public:
   void VisualizeObstacles() const;
   friend std::ostream& operator<<(std::ostream& os, const OccupancyGridMap& map); //Outputs the map when using os << map
 
+  void VisualizeProbabilities(std::ostream& os) const;
+
 private:
   void Visualize(std::ostream& os) const; //Visualize the map 
 
