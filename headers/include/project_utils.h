@@ -53,3 +53,4 @@ int Localize(const int direction); //Localizes the direction to be within 0-360
 double ToRadians(const int degrees); //Changes degrees to radians
 double VectorMagnitude(const DoubleCoordinateType vector); //Returns the magnitude of the vector
 double Slope(const int degrees); //Determines the slop of the vector given the degrees
+double prob(const double logodd);

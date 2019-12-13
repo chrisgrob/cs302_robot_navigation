@@ -46,3 +46,12 @@ double Slope(const int degrees) //returns the slope considering the degree angle
 
   return tan(radians); //tan(Θ) = slope of the vector
 }
+
+
+
+double prob(const double logodd)
+{
+    double odd = exp(logodd);
+
+    return odd / (1 + odd);
+}
