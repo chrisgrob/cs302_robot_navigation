@@ -62,8 +62,8 @@ int main()
   robot.get_map().VisualizeProbabilities(out_file);
   
   // 10th measurement
-  robot.set_pos(std::make_pair(999, 999));
-  robot.set_orientation(CardinalDirection::North);
+  robot.set_pos(std::make_pair(520, 300));
+  robot.set_orientation(CardinalDirection::West);
   robot.RayCasting();
 
   return 0;
