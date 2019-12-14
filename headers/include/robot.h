@@ -7,20 +7,20 @@ class Robot
 {
 private:
   VertexType occupied_vertex_;
-  CardinalDirection orientation_; //Where the robot is currently facing
+  CardinalDirectionType orientation_; //Where the robot is currently facing
   // CoordinateType pos_; //The position on the map that it is currently in
   OccupancyGridMap map_; //The actual map that the robot is on
 
 public:
   Robot(); //default ctor
-  Robot(const CoordinateType pos, const CardinalDirection orientation, const OccupancyGridMap map); //parametrized ctor
+  Robot(const CoordinateType pos, const CardinalDirectionType orientation, const OccupancyGridMap map); //parametrized ctor
 
 
   void set_pos(const CoordinateType pos); //sets position of the robot
   CoordinateType get_pos() const; //returns the current position of the robot
 
-  void set_orientation(const CardinalDirection orientation); //sets orientation of the robot
-  CardinalDirection get_orientation() const; //Returns the current orientation of the robot
+  void set_orientation(const CardinalDirectionType orientation); //sets orientation of the robot
+  CardinalDirectionType get_orientation() const; //Returns the current orientation of the robot
 
   void set_map(const OccupancyGridMap map); //Sets the current map of the robot
   const OccupancyGridMap& get_map() const; //Returns what map the robot is on
@@ -49,31 +49,31 @@ private:
     const bool x_increment,
     const CastType cast_type);
 
-  std::tuple<VertexType, Trilean, bool> DesiredVertex(
+  std::tuple<VertexType, TrileanType, bool> DesiredVertex(
     const VertexType read_vertex,
     const DoubleCoordinateType ray_pos,
     const SignPair steps,
     const CastType cast_type); //The desired vertex for where on the map the ray casting is occurring
 
-  CardinalDirection DesiredDirection(
+  CardinalDirectionType DesiredDirection(
     const VertexType read_vertex, 
     const DoubleCoordinateType ray_pos, 
     const SignPair steps, 
     const CastType cast_type);
 
-  CardinalDirection DesiredDirectionVertical(const SignPair steps);
-  CardinalDirection DesiredDirectionDiagonal(const SignPair steps);
-  CardinalDirection DesiredDirectionNormal(
+  CardinalDirectionType DesiredDirectionVertical(const SignPair steps);
+  CardinalDirectionType DesiredDirectionDiagonal(const SignPair steps);
+  CardinalDirectionType DesiredDirectionNormal(
     const VertexType read_vertex, 
     const DoubleCoordinateType ray_pos, 
     const SignPair steps);
 
   // Helper for DesiredDirectionNormal()
-  CardinalDirection DesiredDirectionAxis(const int read_y, const double ray_y, const SignPair steps);
+  CardinalDirectionType DesiredDirectionAxis(const int read_y, const double ray_y, const SignPair steps);
 
-  std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction);
+  std::pair<EdgeType, bool> DesiredEdge(const VertexType vertex, const CardinalDirectionType desired_direction);
 
-  std::pair<VertexType, Trilean> VertexFromEdge(const std::pair<EdgeType, bool> desired_edge);
+  std::pair<VertexType, TrileanType> VertexFromEdge(const std::pair<EdgeType, bool> desired_edge);
 
 
   // Cast will call this for each vertex it passes through
@@ -84,10 +84,10 @@ private:
   // Utility functions, defined in robot_utils.cpp
   unsigned int Quartile(const int degrees); //Returns an int for the quartile of wherever the vector is
   SignPair Steps(const unsigned int quartile); //Returns the sign pair in relation to the quartile
-  bool Horizontal(const int read_y, const float ray_y, const Sign step_y); //Determines whether it can step horizontally or not
+  bool Horizontal(const int read_y, const float ray_y, const SignType step_y); //Determines whether it can step horizontally or not
   bool IsFree(const VertexType vertex);
   bool HasEdges(const VertexType vertex);
   CoordinateType RelativeReadPos(const VertexType read_vertex);
-  bool XIncrement(const CardinalDirection direction);
+  bool XIncrement(const CardinalDirectionType direction);
 
 };

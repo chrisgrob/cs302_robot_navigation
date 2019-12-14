@@ -1,6 +1,6 @@
 #include "cardinal_direction.h"
 
-std::ostream& operator<<(std::ostream& os, const CardinalDirection cardinal_direction)
+std::ostream& operator<<(std::ostream& os, const CardinalDirectionType cardinal_direction)
 {
   os << "CardinalDirection::";
 

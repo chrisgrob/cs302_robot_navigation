@@ -5,7 +5,7 @@ Robot::Robot() {}
 //Sets the X, Y coordinates to 0,0 and facing south
 
 // Parameterized c-tor
-Robot::Robot(const CoordinateType pos, const CardinalDirection orientation, const OccupancyGridMap map)
+Robot::Robot(const CoordinateType pos, const CardinalDirectionType orientation, const OccupancyGridMap map)
   : occupied_vertex_(map.Vertex(pos)), orientation_(orientation), map_(map) {}
 //Pased off of the cordinate position and orientation, it will make a map and be able to save that map
 
@@ -14,8 +14,8 @@ Robot::Robot(const CoordinateType pos, const CardinalDirection orientation, cons
 void Robot::set_pos(const CoordinateType pos) { occupied_vertex_ = map_.Vertex(pos); } //set position
 CoordinateType Robot::get_pos() const { return map_.Coordinate(occupied_vertex_); } //get position
 
-void Robot::set_orientation(const CardinalDirection orientation) { orientation_ = orientation; } //set orientation
-CardinalDirection Robot::get_orientation() const { return orientation_; } //get orientation
+void Robot::set_orientation(const CardinalDirectionType orientation) { orientation_ = orientation; } //set orientation
+CardinalDirectionType Robot::get_orientation() const { return orientation_; } //get orientation
 
 void Robot::set_map(const OccupancyGridMap map) { map_ = map; } //set map
 const OccupancyGridMap& Robot::get_map() const { return map_; } //get map
@@ -107,7 +107,7 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
   {
     ray_pos = RayIncrement(ray_pos, direction, steps, x_increment, cast_type);
 
-    const std::tuple<VertexType, Trilean, bool> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
+    const std::tuple<VertexType, TrileanType, bool> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
     
     x_increment = std::get<2>(desired_vertex);
 
@@ -179,19 +179,19 @@ DoubleCoordinateType Robot::RayIncrement(
 
 
 // Main helper for Cast()
-std::tuple<VertexType, Trilean, bool> Robot::DesiredVertex(
+std::tuple<VertexType, TrileanType, bool> Robot::DesiredVertex(
   const VertexType read_vertex,
   const DoubleCoordinateType ray_pos,
   const SignPair steps,
   const CastType cast_type)
 {
 
-  const CardinalDirection desired_direction = DesiredDirection(read_vertex, ray_pos, steps, cast_type);
+  const CardinalDirectionType desired_direction = DesiredDirection(read_vertex, ray_pos, steps, cast_type);
   const std::pair<EdgeType, bool> desired_edge = DesiredEdge(read_vertex, desired_direction);
 
   const bool x_increment = XIncrement(desired_direction);
 
-  const std::pair<VertexType, Trilean> vertex_from_edge = VertexFromEdge(desired_edge);
+  const std::pair<VertexType, TrileanType> vertex_from_edge = VertexFromEdge(desired_edge);
   return std::make_tuple(
     vertex_from_edge.first,
     vertex_from_edge.second,
@@ -200,13 +200,13 @@ std::tuple<VertexType, Trilean, bool> Robot::DesiredVertex(
 
 
 
-CardinalDirection Robot::DesiredDirection(
+CardinalDirectionType Robot::DesiredDirection(
   const VertexType read_vertex, 
   const DoubleCoordinateType ray_pos, 
   const SignPair steps, 
   const CastType cast_type)
 {
-  CardinalDirection desired_direction;
+  CardinalDirectionType desired_direction;
 
   switch (cast_type)
   {
@@ -235,9 +235,9 @@ CardinalDirection Robot::DesiredDirection(
 
 
 // Either North or South depending on steps
-CardinalDirection Robot::DesiredDirectionVertical(const SignPair steps)
+CardinalDirectionType Robot::DesiredDirectionVertical(const SignPair steps)
 {
-  CardinalDirection direction;
+  CardinalDirectionType direction;
 
   switch (steps.second)
   {
@@ -260,9 +260,9 @@ CardinalDirection Robot::DesiredDirectionVertical(const SignPair steps)
 
 
 // Similar to DesiredDirectionVertical()
-CardinalDirection Robot::DesiredDirectionDiagonal(const SignPair steps)
+CardinalDirectionType Robot::DesiredDirectionDiagonal(const SignPair steps)
 {
-  CardinalDirection direction;
+  CardinalDirectionType direction;
 
   switch (steps.first)
   {
@@ -316,12 +316,12 @@ CardinalDirection Robot::DesiredDirectionDiagonal(const SignPair steps)
 
 
 //Gets the desired direction from where it wants to ray cast
-CardinalDirection Robot::DesiredDirectionNormal(
+CardinalDirectionType Robot::DesiredDirectionNormal(
   const VertexType read_vertex, 
   const DoubleCoordinateType ray_pos, 
   const SignPair steps)
 {
-  CardinalDirection direction;
+  CardinalDirectionType direction;
 
   const CoordinateType read_pos = RelativeReadPos(read_vertex);
   const CoordinateType robot_pos = get_pos();
@@ -346,9 +346,9 @@ CardinalDirection Robot::DesiredDirectionNormal(
 
 
 
-CardinalDirection Robot::DesiredDirectionAxis(const int read_y, const double ray_y, const SignPair steps)
+CardinalDirectionType Robot::DesiredDirectionAxis(const int read_y, const double ray_y, const SignPair steps)
 {
-  CardinalDirection direction;
+  CardinalDirectionType direction;
 
   const bool horizontal = Horizontal(read_y, ray_y, steps.second);
 
@@ -388,7 +388,7 @@ CardinalDirection Robot::DesiredDirectionAxis(const int read_y, const double ray
 
 
 
-std::pair<EdgeType, bool> Robot::DesiredEdge(const VertexType vertex, const CardinalDirection desired_direction)
+std::pair<EdgeType, bool> Robot::DesiredEdge(const VertexType vertex, const CardinalDirectionType desired_direction)
 { //Returns the desired edge of the pair and tells it where it should be facing for the proper edge
   std::pair<EdgeType, bool> desired_edge;
   
@@ -399,7 +399,7 @@ std::pair<EdgeType, bool> Robot::DesiredEdge(const VertexType vertex, const Card
   for (auto iter = available_edges.first; iter != available_edges.second; iter++)
   {
     // CardinalDirection edge_direction = boost::get(CardinalDirection, map.get_map(), *iter);
-    CardinalDirection edge_direction = map_.get_map()[*iter];
+    CardinalDirectionType edge_direction = map_.get_map()[*iter];
 
     if (edge_direction == desired_direction)
     {
@@ -414,9 +414,9 @@ std::pair<EdgeType, bool> Robot::DesiredEdge(const VertexType vertex, const Card
 
 
 
-std::pair<VertexType, Trilean> Robot::VertexFromEdge(const std::pair<EdgeType, bool> edge)
+std::pair<VertexType, TrileanType> Robot::VertexFromEdge(const std::pair<EdgeType, bool> edge)
 {
-  std::pair<VertexType, Trilean> vertex_from_edge;
+  std::pair<VertexType, TrileanType> vertex_from_edge;
 
   if (edge.second) 
   {
