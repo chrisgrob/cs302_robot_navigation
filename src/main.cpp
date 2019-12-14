@@ -67,5 +67,8 @@ int main()
   out_file.open("probabilities.txt");
   robot.get_map().VisualizeProbabilities(out_file);
 
+  std::cout << "The probablities of being taken for each cell of the occupancy grid map have been " << std::endl;
+  std::cout << "put into a file called \"probabilities.txt\"" << std::endl;
+
   return 0;
 }
