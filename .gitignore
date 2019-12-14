@@ -3,3 +3,4 @@ bin
 main
 config_path.txt
 .vscode
+probabilities.txt
