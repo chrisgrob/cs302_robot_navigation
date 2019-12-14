@@ -66,7 +66,7 @@ SignPair Robot::Steps(const unsigned int quartile) //Makes the first and second 
 
 
 
-bool Robot::Horizontal(const int read_y, const float ray_y, const SignType step_y)
+bool Robot::Horizontal(const int read_y, const float ray_y, const Sign step_y)
 {
   bool horizontal;
 
@@ -154,7 +154,7 @@ CoordinateType Robot::RelativeReadPos(const VertexType read_vertex)
 
 
 
-bool Robot::XIncrement(const CardinalDirectionType direction)
+bool Robot::XIncrement(const CardinalDirection direction)
 {
   bool x_increment = true;
   

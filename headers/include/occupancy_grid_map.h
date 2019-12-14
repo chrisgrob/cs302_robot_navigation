@@ -51,5 +51,5 @@ private:
   bool VertexIsLeftEdge(const VertexType vertex);
   bool VertexIsRightEdge(const VertexType vertex);
 
-  void Connection(const VertexType vertex, const CoordinateType coordinate_change, const CardinalDirectionType direction);
+  void Connection(const VertexType vertex, const CoordinateType coordinate_change, const CardinalDirection direction);
 };

@@ -354,7 +354,7 @@ bool OccupancyGridMap::VertexIsRightEdge(const VertexType vertex)
 
 
 
-void OccupancyGridMap::Connection(const VertexType vertex, const CoordinateType coordinate_change, const CardinalDirectionType direction)
+void OccupancyGridMap::Connection(const VertexType vertex, const CoordinateType coordinate_change, const CardinalDirection direction)
 {
   const CoordinateType coordinate = Coordinate(vertex);
   const CoordinateType other_coordinate = std::make_pair(

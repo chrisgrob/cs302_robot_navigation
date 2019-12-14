@@ -1,6 +1,6 @@
 #include "sign.h"
 
-std::ostream& operator<<(std::ostream& os, const SignType sign)
+std::ostream& operator<<(std::ostream& os, const Sign sign)
 {
   os << "Sign::";
 
@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const SignType sign)
   return os;
 }
 
-int operator+(const SignType sign, const int number)
+int operator+(const Sign sign, const int number)
 {
   int sum;
 
@@ -46,12 +46,12 @@ int operator+(const SignType sign, const int number)
   return sum;
 }
 
-int operator+(const int number, const SignType sign)
+int operator+(const int number, const Sign sign)
 {
   return operator+(sign, number);
 }
 
-double operator+(const SignType sign, const double number)
+double operator+(const Sign sign, const double number)
 {
   double sum;
 
@@ -74,12 +74,12 @@ double operator+(const SignType sign, const double number)
   return sum;
 }
 
-double operator+(const double number, const SignType sign)
+double operator+(const double number, const Sign sign)
 {
   return operator+(sign, number);
 }
 
-int operator*(const SignType sign, const int number)
+int operator*(const Sign sign, const int number)
 {
   int product;
 
@@ -102,12 +102,12 @@ int operator*(const SignType sign, const int number)
   return product;
 }
 
-int operator*(const int number, const SignType sign)
+int operator*(const int number, const Sign sign)
 {
   return operator*(sign, number);
 }
 
-double operator*(const SignType sign, const double number)
+double operator*(const Sign sign, const double number)
 {
   double product;
 
@@ -130,7 +130,7 @@ double operator*(const SignType sign, const double number)
   return product;
 }
 
-double operator*(const double number, const SignType sign)
+double operator*(const double number, const Sign sign)
 {
   return operator*(sign, number);
 }
