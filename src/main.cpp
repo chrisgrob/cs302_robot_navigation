@@ -63,7 +63,8 @@ int main()
   robot.set_orientation(CardinalDirection::West);
   robot.RayCasting();
 
-  std::ofstream out_file = std::ofstream("probabilities.txt");
+  std::ofstream out_file;
+  out_file.open("probabilities.txt");
   robot.get_map().VisualizeProbabilities(out_file);
 
   return 0;
