@@ -33,7 +33,7 @@ private:
   void RayRange(const int start, const int end); //Determines the range of the cast
   void Ray(const int direction); //What the ray is going to be
 
-  enum class CastType
+  enum CastType
   {
     Vertical,
     Diagonal,
@@ -49,11 +49,14 @@ private:
     const bool x_increment,
     const CastType cast_type);
 
-  std::tuple<VertexType, TrileanType, bool> DesiredVertex(
+  void DesiredVertex(
     const VertexType read_vertex,
     const DoubleCoordinateType ray_pos,
     const SignPair steps,
-    const CastType cast_type); //The desired vertex for where on the map the ray casting is occurring
+    const CastType cast_type,
+    VertexType& vertex,
+    TrileanType& trilean,
+    bool& boolean); //The desired vertex for where on the map the ray casting is occurring
 
   CardinalDirectionType DesiredDirection(
     const VertexType read_vertex, 

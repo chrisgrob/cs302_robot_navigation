@@ -79,15 +79,15 @@ void Robot::Ray(const int direction)
 
   if (vertical)
   {
-    cast_type = CastType::Vertical;
+    cast_type = Vertical;
   }
   else if (diagonal) 
   {
-    cast_type = CastType::Diagonal;
+    cast_type = Diagonal;
   }
   else
   {
-    cast_type = CastType::Normal;
+    cast_type = Normal;
   }
 
   Cast(steps, direction, cast_type);
@@ -107,11 +107,19 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
   {
     ray_pos = RayIncrement(ray_pos, direction, steps, x_increment, cast_type);
 
-    const std::tuple<VertexType, TrileanType, bool> desired_vertex = DesiredVertex(read_vertex, ray_pos, steps, cast_type);
-    
-    x_increment = std::get<2>(desired_vertex);
+    VertexType vertex;
+    TrileanType trilean;
+    bool x_increment;
+    DesiredVertex(
+      read_vertex, 
+      ray_pos, 
+      steps, 
+      cast_type, 
+      vertex, 
+      trilean, 
+      x_increment);
 
-    switch (std::get<1>(desired_vertex))
+    switch (trilean)
     {
     case Trilean::Unknown:
     {
@@ -120,14 +128,14 @@ void Robot::Cast(const SignPair steps, const int direction, const CastType cast_
     }
     case Trilean::False:
     {
-      UpdateMap(std::get<0>(desired_vertex), 0.9);
+      UpdateMap(vertex, 0.9);
       obstructed = true;
       break;
     }
     case Trilean::True:
     {
-      UpdateMap(std::get<0>(desired_vertex), -0.7);
-      read_vertex = std::get<0>(desired_vertex);
+      UpdateMap(vertex, -0.7);
+      read_vertex = vertex;
       break;
     }
     }
@@ -149,18 +157,18 @@ DoubleCoordinateType Robot::RayIncrement(
 
   switch (cast_type)
   {
-  case CastType::Vertical:
+  case Vertical:
   {
     ray_increment.second += steps.second * 1.0;
     break;
   }
-  case CastType::Diagonal:
+  case Diagonal:
   {
     ray_increment.first += steps.first * 1.0;
     ray_increment.second += steps.second * 1.0;
     break;
   }
-  case CastType::Normal:
+  case Normal:
   {
     if (x_increment) {
       ray_increment.first += steps.first * 1.0;
@@ -179,11 +187,14 @@ DoubleCoordinateType Robot::RayIncrement(
 
 
 // Main helper for Cast()
-std::tuple<VertexType, TrileanType, bool> Robot::DesiredVertex(
+void Robot::DesiredVertex(
   const VertexType read_vertex,
   const DoubleCoordinateType ray_pos,
   const SignPair steps,
-  const CastType cast_type)
+  const CastType cast_type,
+  VertexType& vertex,
+  TrileanType& trilean,
+  bool& boolean)
 {
 
   const CardinalDirectionType desired_direction = DesiredDirection(read_vertex, ray_pos, steps, cast_type);
@@ -192,10 +203,10 @@ std::tuple<VertexType, TrileanType, bool> Robot::DesiredVertex(
   const bool x_increment = XIncrement(desired_direction);
 
   const std::pair<VertexType, TrileanType> vertex_from_edge = VertexFromEdge(desired_edge);
-  return std::make_tuple(
-    vertex_from_edge.first,
-    vertex_from_edge.second,
-    x_increment);
+
+  vertex = vertex_from_edge.first;
+  trilean = vertex_from_edge.second;
+  boolean = x_increment;
 }
 
 
@@ -210,17 +221,17 @@ CardinalDirectionType Robot::DesiredDirection(
 
   switch (cast_type)
   {
-  case CastType::Vertical:
+  case Vertical:
   {
     desired_direction = DesiredDirectionVertical(steps);
     break;
   }
-  case CastType::Diagonal:
+  case Diagonal:
   {
     desired_direction = DesiredDirectionDiagonal(steps);
     break;
   }
-  case CastType::Normal:
+  case Normal:
   {
     desired_direction = DesiredDirectionNormal(read_vertex, ray_pos, steps);
     break;
