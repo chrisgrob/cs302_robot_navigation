@@ -1,12 +1,11 @@
 EXECUTABLE_PATH=..
 INCLUDE_PATH=../headers/include
 PROJECT_DEPENDENCY_PATH=../headers/dependencies
-DEPENDENCY_PATH := $(shell cat ../config_path.txt)
 OUT_PATH=../bin
 
 CXX = g++
 
-CFLAGS = -O3 -I$(INCLUDE_PATH) -isystem$(PROJECT_DEPENDENCY_PATH) -isystem$(DEPENDENCY_PATH) -std=c++11 -Wall
+CFLAGS = -O3 -I$(INCLUDE_PATH) -isystem$(PROJECT_DEPENDENCY_PATH) -std=c++11 -Wall
 LFLAGS = 
 
 TARGETS = main
